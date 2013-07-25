@@ -1,0 +1,9 @@
+test
+bower.json
+node_modules
+component.json
+bower.json
+.gitignore
+.idea
+.npmignore
+.travis.yml

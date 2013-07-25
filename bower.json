@@ -1,0 +1,14 @@
+{
+  "name": "ducktype",
+  "version": "0.0.1",
+  "main": "ducktype.js",
+  "ignore": [
+    "node_modules",
+    "test",
+    ".idea",
+    ".gitignore",
+    ".npmignore",
+    ".travis.yml",
+    "package.json"
+  ]
+}

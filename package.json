@@ -1,0 +1,35 @@
+{
+  "name": "ducktype",
+  "version": "0.0.1",
+  "description": "Data validation using a ducktype interface",
+  "author": "Jos de Jong <wjosdejong@gmail.com>",
+  "contributors": [
+    {
+      "name": "Jos de Jong",
+      "email": "wjosdejong@gmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/josdejong/ducktype.git"
+  },
+  "keywords": [
+    "ducktype",
+    "interface",
+    "data",
+    "validation",
+    "type",
+    "type checking"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "nodeunit": "latest"
+  },
+  "scripts": {
+    "test": "nodeunit test"
+  },
+  "main": "./ducktype.js",
+  "engines": {
+    "node": "*"
+  }
+}
