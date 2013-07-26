@@ -612,3 +612,59 @@ exports['Object - optional fields'] = function(test) {
 
   test.done();
 };
+
+exports['Array - basic'] = function(test) {
+  var type = ducktype([Number]);
+  test.same(type.test([2, 4, 5]), true);
+  test.same(type.test([2, 'string', 5]), false);
+  test.same(type.test([null, 4, 5]), false);
+  test.same(type.test([]), true);
+
+  test.done();
+};
+
+exports['Array - with object'] = function(test) {
+  var type = ducktype([
+    {
+      a: String,
+      b: Number
+    }
+  ]);
+
+  test.same(type.test([]), true);
+  test.same(type.test([{a: 's', b: 2}]), true);
+  test.same(type.test([{a: 's', b: 2}, {a: 's', b: 2}]), true);
+  test.same(type.test([{a: 's', b: 2}, {a: 's', b: 's'}]), false);
+  test.same(type.test([{a: 's', b: 2}, {a: /regexp/, b: 2}]), false);
+
+  test.done();
+};
+
+
+exports['Object with Array with Object'] = function (test) {
+  var family = ducktype({
+    name: String,
+    age: ducktype(Number, {optional: true}),
+    children: [
+      {
+        name: String,
+        age: ducktype(Number, {optional: true})
+      }
+    ]
+  });
+
+  test.same(family.test({
+    name: 'John',
+    children: [
+      {
+        'name': 'Mary',
+        'age': 6
+      },
+      {
+        'name': 'Grant'
+      }
+    ]
+  }), true);
+
+  test.done();
+};

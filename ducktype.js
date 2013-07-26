@@ -146,11 +146,38 @@
     else if (type === undefined) {
       newDucktype = ducktype['undefined'];
     }
-    // TODO: add types null, undefined
     else if (type instanceof DuckType) {
       newDucktype = type; // already a duck type
     }
+    else if (Array.isArray(type)) {
+      if (type.length != 1) {
+        throw new Error('Array must contain one element');
+      }
+
+      // create a test for the childs of the array
+      var childTest = ducktype(type[0]).test;
+
+      // create the ducktype
+      newDucktype = new DuckType({
+        name: options && options.name || null,
+        test: function test (object) {
+          // test whether object is an array
+          if (!Array.isArray(object)) {
+            return false;
+          }
+
+          // test all childs of the array
+          for (var i = 0, ii = object.length; i < ii; i++) {
+            if (!childTest(object[i])) {
+              return false;
+            }
+          }
+          return true;
+        }
+      });
+    }
     else if (type instanceof Object) {
+      // retrieve the test functions for each of the objects properties
       tests = {};
       for (var prop in type) {
         if (type.hasOwnProperty(prop)) {
@@ -173,8 +200,7 @@
       });
     }
     else {
-      // a build-int type expected such as Number, String, Date, ...
-      // TODO: optimize by generating the function as new Function(str)
+      // A custom type, typically a prototype function.
       newDucktype = new DuckType({
         name: options && options.name || null,
         test: function test (object) {
@@ -187,7 +213,7 @@
     if (options && ((options.optional !== undefined) || (options.nullable !== undefined))) {
       var optional = (options.optional !== undefined) ? options.optional : false;
       var nullable = (options.nullable !== undefined) ? options.nullable : false;
-      // TODO: option strict
+      // TODO: create an soption strict
 
       test = newDucktype.test;
       newDucktype = new DuckType({
@@ -206,7 +232,7 @@
 
   // TODO: implement a parser implements js type annotations
 
-  // TODO: implement non-strict tests and an option strict: Boolean
+  // TODO: implement non-strict tests and an option strict
 
   // type Array
   ducktype.array = new DuckType({
