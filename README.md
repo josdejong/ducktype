@@ -191,11 +191,11 @@ Where:
   - A boolean `optional` (optional)
   - A boolean `nullable` (optional)
 
-A created ducktype has methods:
+A created ducktype has functions:
 
-- `test(object)`. A method which returns true when provided object matches
+- `test(object)`. A function which returns true when provided object matches
   the ducktype, and false otherwise.
-- `validate(object)`. A method which will throw a TypeError when the provided
+- `validate(object)`. A function which will throw a TypeError when the provided
   object does not match the ducktype.
 
 Example:
@@ -240,6 +240,21 @@ ducktype(Number).test(2.3); // true
 To execute tests for the library, run:
 
     npm test
+
+
+## Roadmap
+
+- Implement common data types like url, phone number, email, postcode, etc.
+- Implement extra options for specific types:
+  - Number: integer, min, max, finite, odd, even, positive, negative, nan, ...
+  - String: lowercase, uppercase, alpha, alphanumeric, empty, ...
+- Implement a parser accepting a string describing a type in
+  [annotations](https://developers.google.com/closure/compiler/docs/js-for-compiler#types).
+- Implement support to define your own tests for custom types.
+- Implement non-strict type checking: when an object can be converted to the
+  desired type, it is ok. For example a string containing a numeric value can
+  be considered a valid Number, or a string containing an ISO date can be
+  considered a valid Date.
 
 
 ## License

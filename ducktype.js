@@ -213,7 +213,7 @@
     if (options && ((options.optional !== undefined) || (options.nullable !== undefined))) {
       var optional = (options.optional !== undefined) ? options.optional : false;
       var nullable = (options.nullable !== undefined) ? options.nullable : false;
-      // TODO: create an soption strict
+      // TODO: create an option strict
 
       test = newDucktype.test;
       newDucktype = new DuckType({
