@@ -1,6 +1,18 @@
 # ducktype
 
-Data validation using a ducktype interface. For JavaScript and Node.js.
+Flexible data validation using a ducktype interface. For JavaScript and Node.js.
+
+```js
+var ducktype = require('ducktype');
+
+var person = ducktype({
+  name: String,
+  age: Number
+});
+
+person.test({name: 'John', age: 34}); // true
+person.test({name: 'Mary'});          // false
+```
 
 ## Install
 
@@ -51,6 +63,12 @@ number.test(2.3);   // true
 number.test('hi');  // false
 number.test(true);  // false
 
+// combination of types
+var combi = ducktype(Number, String);
+combi.test(2.3);   // true
+combi.test('hi');  // true
+combi.test(true);  // false
+
 // create a structured object
 var person = ducktype({
   name: String,
@@ -58,7 +76,7 @@ var person = ducktype({
   address: {
     city: String,
     street: String,
-    country:
+    country: String
   },
   email: ducktype(String, {optional: true})
 });
@@ -70,8 +88,7 @@ person.test({
     city: 'Sunnyvale, CA 95125',
     street: '701 First Ave.',
     country: 'United States'
-  },
-  phone: '123-45678'
+  }
 }); // true
 
 person.test({
@@ -87,6 +104,7 @@ A ducktype can be constructed as:
 ```
 ducktype(type)
 ducktype(type, options)
+ducktype(type1, type2, ...)
 ducktype(type1, type2, ..., options)
 ```
 

@@ -105,6 +105,36 @@ exports['Basic types - Function'] = function(test) {
 
 // TODO: test options nullable and optional
 
+exports['Combination of types'] = function(test) {
+  // strict
+  var type = ducktype(Number, Boolean);
+  test.same(type.test(2.3), true);
+  test.same(type.test(false), true);
+  test.same(type.test(true), true);
+  test.same(type.test('23'), false);
+  test.same(type.test('string'), false);
+  test.same(type.test({}), false);
+  test.same(type.test(new Date()), false);
+  test.same(type.test([1,2,3]), false);
+  test.same(type.test(/regexp/), false);
+  test.same(type.test(function() {}), false);
+
+  // strict
+  type = ducktype(Boolean, Number);
+  test.same(type.test(2.3), true);
+  test.same(type.test(false), true);
+  test.same(type.test(true), true);
+  test.same(type.test('23'), false);
+  test.same(type.test('string'), false);
+  test.same(type.test({}), false);
+  test.same(type.test(new Date()), false);
+  test.same(type.test([1,2,3]), false);
+  test.same(type.test(/regexp/), false);
+  test.same(type.test(function() {}), false);
+
+  test.done();
+};
+
 exports['Object - basic'] = function(test) {
   // strict
   var type = ducktype({a: String, b: Number});

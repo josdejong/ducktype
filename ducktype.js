@@ -9,6 +9,7 @@
  * Syntax:
  *     ducktype(type)
  *     ducktype(type, options)
+ *     ducktype(type1, type2, ...)
  *     ducktype(type1, type2, ..., options)
  *
  * Where:
@@ -44,6 +45,7 @@
    * Create a new duck type. Syntax:
    *     ducktype(type)
    *     ducktype(type, options)
+   *     ducktype(type1, type2, ...)
    *     ducktype(type1, type2, ..., options)
    *
    * Where:
@@ -73,8 +75,8 @@
     else {
       types = [];
       for (var i = 0, ii = arguments.length; i < ii; i++) {
-        // TODO: error, every argument is an instance of Object
-        if ((i == ii - 1) && arguments[i] instanceof Object) {
+        // TODO: checking the last argument to be an object is a little tricky
+        if ((i == ii - 1) && arguments[i].constructor === Object) {
           options = arguments[i];
         }
         else {
@@ -104,7 +106,6 @@
           return false;
         }
       });
-      console.log(types, tests)
     }
     else if (type === Boolean) {
       newDucktype = ducktype.boolean;
