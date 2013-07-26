@@ -3,7 +3,7 @@
 https://github.com/josdejong/ducktype
 
 
-## version 0.1.0
+## 2013-07-26, version 1.0.0
 
 - Added support for structured arrays, like `ducktype([Number])`.
 - Support for combining types, like `ducktype(Number, String)`.
