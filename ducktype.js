@@ -26,15 +26,24 @@
    * @constructor DuckType
    */
   function DuckType (options) {
-    // TODO: add a function testStrict
     this.name = options.name;
     this.test = options.test;
   }
 
+  /**
+   * Test whether an object matches this DuckType
+   * @param {*} object
+   * @returns {boolean} match
+   */
   DuckType.prototype.test = function (object) {
     return false;
   };
 
+  /**
+   * Test whether an object matches this DuckType.
+   * Throws a TypeError when the object does not match.
+   * @param {*} object
+   */
   DuckType.prototype.validate = function (object) {
     if (!this.test(object)) {
       throw new TypeError(object + ' is not a valid ' + (this.name || 'type'));
@@ -107,6 +116,9 @@
         }
       });
     }
+    else if (type === Array) {
+      newDucktype = ducktype.array;
+    }
     else if (type === Boolean) {
       newDucktype = ducktype.boolean;
     }
@@ -119,10 +131,22 @@
     else if (type === Number) {
       newDucktype = ducktype.number;
     }
+    else if (type === Object) {
+      newDucktype = ducktype.object;
+    }
     else if (type === String) {
       newDucktype = ducktype.string;
     }
-    // TODO: types null, undefined, Array, regexp, ...
+    else if (type === RegExp) {
+      newDucktype = ducktype.regexp;
+    }
+    else if (type === null) {
+      newDucktype = ducktype['null'];
+    }
+    else if (type === undefined) {
+      newDucktype = ducktype['undefined'];
+    }
+    // TODO: add types null, undefined
     else if (type instanceof DuckType) {
       newDucktype = type; // already a duck type
     }
@@ -182,123 +206,99 @@
 
   // TODO: implement a parser implements js type annotations
 
-  /**
-   * Test whether an object is a Number
-   * @param {*} object
-   * @returns {boolean} isNumber
-   */
-  function isNumber(object) {
-    return ((object instanceof Number) || (typeof object === 'number'));
-  }
+  // TODO: implement non-strict tests and an option strict: Boolean
 
-  /**
-   * Test whether an object is a String
-   * @param {*} object
-   * @returns {boolean} isString
-   */
-  function isString(object) {
-    return ((object instanceof String) || (typeof object === 'string'));
-  }
-
-  /**
-   * Test whether an object is a boolean
-   * @param {*} object
-   * @returns {boolean} isBoolean
-   */
-  function isBoolean(object) {
-    return ((object instanceof Boolean) || (typeof object === 'boolean'));
-  }
-
-  /**
-   * Test whether an object is a function
-   * @param {*} object
-   * @returns {boolean} isFunction
-   */
-  function isFunction(object) {
-    return ((object instanceof Function) || (typeof object === 'function'));
-  }
-
-  /**
-   * Test whether an object is a Date
-   * @param {*} object
-   * @returns {boolean} isDate
-   */
-  function isDate(object) {
-    return (object instanceof Date);
-  }
-
-  /**
-   * Test an object against a type.
-   * Static test.
-   * @param {*} type
-   * @param {*} object
-   * @param {boolean} [strict]
-   * @return {boolean} match
-   * @private
-   */
-  // TODO: remove function testAll (first take over the non-strict type tests
-  function testAll (type, object, strict) {
-    // selected type, replace the .test function
-    if (strict === undefined) {
-      strict = true;
+  // type Array
+  ducktype.array = new DuckType({
+    name: 'Array',
+    test: function isArray(object) {
+      return Array.isArray(object);
     }
+  });
 
-    // number
-    if (type === Number) {
-      return isNumber(object) ||
-          (!strict && !isNaN(Number(object)));
+  // type Boolean
+  ducktype.boolean = new DuckType({
+    name: 'Boolean',
+    test: function isBoolean(object) {
+      return ((object instanceof Boolean) || (typeof object === 'boolean'));
     }
+  });
 
-    // string
-    if (type === String) {
-      return isString(object) ||
-          (!strict && (isNumber(object) || isBoolean(object) || isDate(object))); // TODO: allow more types to be converted to string
+  // type Date
+  ducktype.date = new DuckType({
+    name: 'Date',
+    test: function isDate(object) {
+      return (object instanceof Date);
     }
+  });
 
-    // function
-    if (type === Function) {
-      return isFunction(object); // TODO: non-strict for a function?
+  // type Function
+  ducktype.function = new DuckType({
+    name: 'Function',
+    test: function isFunction(object) {
+      return ((object instanceof Function) || (typeof object === 'function'));
     }
+  });
 
-    // boolean
-    if (type === Boolean) {
-      return ((object instanceof Boolean) ||
-          (typeof object === 'boolean')) ||
-          (!strict && (isNumber(object) ||
-              !isNaN(Number(object)) ||
-              (object === 'true') ||
-              (object === 'false'))); // TODO: specify and test non-strict bool
+  // type Number
+  ducktype.number = new DuckType({
+    name: 'Number',
+    test: function isNumber(object) {
+      return ((object instanceof Number) || (typeof object === 'number'));
     }
+  });
 
-    // object
-    if (type instanceof Object) { // TODO: not so good way to detect an object
-      for (var prop in type) {
-        if (type.hasOwnProperty(prop)) {
-          if (!testAll(type[prop], object[prop], strict)) {
-            return false;
-          }
-        }
-      }
-
-      return true;
+  // type Object
+  ducktype.object = new DuckType({
+    name: 'Object',
+    test: function isObject(object) {
+      return ((object instanceof Object) && (object.constructor === Object));
     }
+  });
 
-    // TODO: date
-    // TODO: regexp
-    // TODO: undefined
-    // TODO: null
-    // TODO: array
+  // type RegExp
+  ducktype.regexp = new DuckType({
+    name: 'RegExp',
+    test: function isRegExp(object) {
+      return (object instanceof RegExp);
+    }
+  });
 
-    return false;
+  // type String
+  ducktype.string = new DuckType({
+    name: 'String',
+    test: function isString(object) {
+      return ((object instanceof String) || (typeof object === 'string'));
+    }
+  });
+
+  // type null
+  ducktype['null'] = new DuckType({
+    name: 'null',
+    test: function isNull(object) {
+      return (object === null);
+    }
+  });
+
+  // type undefined
+  ducktype['undefined'] = new DuckType({
+    name: 'undefined',
+    test: function isUndefined(object) {
+      return (object === undefined);
+    }
+  });
+
+  // TODO: add types like url, phone number, email, postcode, ...
+
+  /**
+   * Shims for older JavaScript engines
+   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray
+   */
+  if(!Array.isArray) {
+    Array.isArray = function (vArg) {
+      return Object.prototype.toString.call(vArg) === '[object Array]';
+    };
   }
-
-  // ducktype.test(type, object)     // TODO: add static method test
-  ducktype.boolean  = new DuckType({name: 'Boolean',   test: isBoolean});
-  ducktype.date     = new DuckType({name: 'Date',      test: isDate});
-  ducktype.function = new DuckType({name: 'Function',  test: isFunction});
-  ducktype.number   = new DuckType({name: 'Number',    test: isNumber});
-  ducktype.string   = new DuckType({name: 'String',    test: isString});
-  // TODO: add types like url, phone number, postcode, ...
 
   /**
    * CommonJS module exports
