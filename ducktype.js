@@ -50,6 +50,92 @@
     }
   };
 
+  // The object base contains all basic types
+  var base = {};
+
+  // type Array
+  base.array = new DuckType({
+    name: 'Array',
+    test: function isArray(object) {
+      return (Array.isArray(object) ||
+          ((object != null) && (object.toString() === '[object Arguments]')));
+    }
+  });
+
+  // type Boolean
+  base.boolean = new DuckType({
+    name: 'Boolean',
+    test: function isBoolean(object) {
+      return ((object instanceof Boolean) || (typeof object === 'boolean'));
+    }
+  });
+
+  // type Date
+  base.date = new DuckType({
+    name: 'Date',
+    test: function isDate(object) {
+      return (object instanceof Date);
+    }
+  });
+
+  // type Function
+  base.function = new DuckType({
+    name: 'Function',
+    test: function isFunction(object) {
+      return ((object instanceof Function) || (typeof object === 'function'));
+    }
+  });
+
+  // type Number
+  base.number = new DuckType({
+    name: 'Number',
+    test: function isNumber(object) {
+      return ((object instanceof Number) || (typeof object === 'number'));
+    }
+  });
+
+  // type Object
+  base.object = new DuckType({
+    name: 'Object',
+    test: function isObject(object) {
+      return ((object instanceof Object) && (object.constructor === Object));
+    }
+  });
+
+  // type RegExp
+  base.regexp = new DuckType({
+    name: 'RegExp',
+    test: function isRegExp(object) {
+      return (object instanceof RegExp);
+    }
+  });
+
+  // type String
+  base.string = new DuckType({
+    name: 'String',
+    test: function isString(object) {
+      return ((object instanceof String) || (typeof object === 'string'));
+    }
+  });
+
+  // type null
+  base['null'] = new DuckType({
+    name: 'null',
+    test: function isNull(object) {
+      return (object === null);
+    }
+  });
+
+  // type undefined
+  base['undefined'] = new DuckType({
+    name: 'undefined',
+    test: function isUndefined(object) {
+      return (object === undefined);
+    }
+  });
+
+  // TODO: add types like url, phone number, email, postcode, ...
+
   /**
    * Create a new duck type. Syntax:
    *     ducktype(type)
@@ -68,6 +154,8 @@
    * @return {DuckType} ducktype
    */
   function ducktype (args) {
+    // TODO: implement support for ducktype(test: Function) to create a custom type
+
     var newDucktype;
     var type = null;
     var types = null;
@@ -117,34 +205,34 @@
       });
     }
     else if (type === Array) {
-      newDucktype = ducktype.array;
+      newDucktype = base.array;
     }
     else if (type === Boolean) {
-      newDucktype = ducktype.boolean;
+      newDucktype = base.boolean;
     }
     else if (type === Date) {
-      newDucktype = ducktype.date;
+      newDucktype = base.date;
     }
     else if (type === Function) {
-      newDucktype = ducktype.function;
+      newDucktype = base.function;
     }
     else if (type === Number) {
-      newDucktype = ducktype.number;
+      newDucktype = base.number;
     }
     else if (type === Object) {
-      newDucktype = ducktype.object;
+      newDucktype = base.object;
     }
     else if (type === String) {
-      newDucktype = ducktype.string;
+      newDucktype = base.string;
     }
     else if (type === RegExp) {
-      newDucktype = ducktype.regexp;
+      newDucktype = base.regexp;
     }
     else if (type === null) {
-      newDucktype = ducktype['null'];
+      newDucktype = base['null'];
     }
     else if (type === undefined) {
-      newDucktype = ducktype['undefined'];
+      newDucktype = base['undefined'];
     }
     else if (type instanceof DuckType) {
       newDucktype = type; // already a duck type
@@ -153,6 +241,8 @@
       if (type.length != 1) {
         throw new Error('Array must contain one element');
       }
+      // TODO: allow zero childs -> return types.array in that case
+      // TODO: support multiple childs (so we can test function arguments)
 
       // create a test for the childs of the array
       var childTest = ducktype(type[0]).test;
@@ -176,7 +266,7 @@
         }
       });
     }
-    else if (type instanceof Object) {
+    else if ((type instanceof Object) && (type.constructor === Object)) {
       // retrieve the test functions for each of the objects properties
       tests = {};
       for (var prop in type) {
@@ -188,6 +278,9 @@
       newDucktype = new DuckType({
         name: options && options.name || null,
         test: function test (object) {
+          // TODO: how to prevent that ducktype({}).test(2) returns true?
+          //       -> or give an error when the given object has no fields?
+          //       -> or in case of no fields, just return ducktype.object?
           for (var prop in tests) {
             if (tests.hasOwnProperty(prop)) {
               if (!tests[prop](object[prop])) {
@@ -234,87 +327,7 @@
 
   // TODO: implement non-strict tests and an option strict
 
-  // type Array
-  ducktype.array = new DuckType({
-    name: 'Array',
-    test: function isArray(object) {
-      return Array.isArray(object);
-    }
-  });
-
-  // type Boolean
-  ducktype.boolean = new DuckType({
-    name: 'Boolean',
-    test: function isBoolean(object) {
-      return ((object instanceof Boolean) || (typeof object === 'boolean'));
-    }
-  });
-
-  // type Date
-  ducktype.date = new DuckType({
-    name: 'Date',
-    test: function isDate(object) {
-      return (object instanceof Date);
-    }
-  });
-
-  // type Function
-  ducktype.function = new DuckType({
-    name: 'Function',
-    test: function isFunction(object) {
-      return ((object instanceof Function) || (typeof object === 'function'));
-    }
-  });
-
-  // type Number
-  ducktype.number = new DuckType({
-    name: 'Number',
-    test: function isNumber(object) {
-      return ((object instanceof Number) || (typeof object === 'number'));
-    }
-  });
-
-  // type Object
-  ducktype.object = new DuckType({
-    name: 'Object',
-    test: function isObject(object) {
-      return ((object instanceof Object) && (object.constructor === Object));
-    }
-  });
-
-  // type RegExp
-  ducktype.regexp = new DuckType({
-    name: 'RegExp',
-    test: function isRegExp(object) {
-      return (object instanceof RegExp);
-    }
-  });
-
-  // type String
-  ducktype.string = new DuckType({
-    name: 'String',
-    test: function isString(object) {
-      return ((object instanceof String) || (typeof object === 'string'));
-    }
-  });
-
-  // type null
-  ducktype['null'] = new DuckType({
-    name: 'null',
-    test: function isNull(object) {
-      return (object === null);
-    }
-  });
-
-  // type undefined
-  ducktype['undefined'] = new DuckType({
-    name: 'undefined',
-    test: function isUndefined(object) {
-      return (object === undefined);
-    }
-  });
-
-  // TODO: add types like url, phone number, email, postcode, ...
+  // TODO: how to accept a functions arguments as Array?
 
   /**
    * Shims for older JavaScript engines
@@ -339,16 +352,14 @@
   /**
    * AMD module exports
    */
-  if (typeof(require) != 'undefined' && typeof(define) != 'undefined') {
-    define(function () {
-      return ducktype;
-    });
+  if (typeof(define) === 'function') {
+    define(ducktype);
   }
 
   /**
    * Browser exports
    */
-  if (typeof(window) != 'undefined') {
+  if (typeof(window)  !== 'undefined') {
     window['ducktype'] = ducktype;
   }
 })();

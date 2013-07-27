@@ -8,6 +8,14 @@
 var ducktype = require('../ducktype.js');
 
 
+// create a custom prototype
+function Person (name, age) {
+  this.name = name;
+  this.age = age;
+}
+var person = new Person('John', 28);
+
+
 exports['Basic types - Array'] = function(test) {
   var type = ducktype(Array);
 
@@ -42,6 +50,9 @@ exports['Basic types - Array'] = function(test) {
   // null, undefined
   test.same(type.test(null), false);
   test.same(type.test(undefined), false);
+
+  // prototype
+  test.same(type.test(person), false);
 
   test.done();
 };
@@ -82,6 +93,9 @@ exports['Basic types - Boolean'] = function(test) {
   test.same(type.test(null), false);
   test.same(type.test(undefined), false);
 
+  // prototype
+  test.same(type.test(person), false);
+
   test.done();
 };
 
@@ -120,6 +134,9 @@ exports['Basic types - Date'] = function(test) {
   // null, undefined
   test.same(type.test(null), false);
   test.same(type.test(undefined), false);
+
+  // prototype
+  test.same(type.test(person), false);
 
   test.done();
 };
@@ -160,6 +177,9 @@ exports['Basic types - Function'] = function(test) {
   test.same(type.test(null), false);
   test.same(type.test(undefined), false);
 
+  // prototype
+  test.same(type.test(person), false);
+
   test.done();
 };
 
@@ -198,6 +218,9 @@ exports['Basic types - Number'] = function(test) {
   // null, undefined
   test.same(type.test(null), false);
   test.same(type.test(undefined), false);
+
+  // prototype
+  test.same(type.test(person), false);
 
   test.done();
 };
@@ -238,6 +261,9 @@ exports['Basic types - Object'] = function(test) {
   test.same(type.test(null), false);
   test.same(type.test(undefined), false);
 
+  // prototype
+  test.same(type.test(person), false);
+
   test.done();
 };
 
@@ -275,6 +301,9 @@ exports['Basic types - String'] = function(test) {
   // null, undefined
   test.same(type.test(null), false);
   test.same(type.test(undefined), false);
+
+  // prototype
+  test.same(type.test(person), false);
 
   test.done();
 };
@@ -315,6 +344,9 @@ exports['Basic types - RegExp'] = function(test) {
   test.same(type.test(null), false);
   test.same(type.test(undefined), false);
 
+  // prototype
+  test.same(type.test(person), false);
+
   test.done();
 };
 
@@ -354,6 +386,9 @@ exports['Basic types - null'] = function(test) {
   test.same(type.test(null), true);
   test.same(type.test(undefined), false);
 
+  // prototype
+  test.same(type.test(person), false);
+
   test.done();
 };
 
@@ -392,6 +427,50 @@ exports['Basic types - undefined'] = function(test) {
   // null, undefined
   test.same(type.test(null), false);
   test.same(type.test(undefined), true);
+
+  // prototype
+  test.same(type.test(person), false);
+
+  test.done();
+};
+
+exports['Basic types - custom prototype'] = function (test) {
+  var type = ducktype(Person);
+
+  // array
+  test.same(type.test([2,3,4]), false);
+
+  // boolean
+  test.same(type.test(true), false);
+  test.same(type.test(false), false);
+
+  // date
+  test.same(type.test(new Date()), false);
+
+  // function
+  test.same(type.test(function () {}), false);
+
+  // number
+  test.same(type.test(0), false);
+  test.same(type.test(2.3), false);
+  test.same(type.test(NaN), false);
+
+  // object
+  test.same(type.test({a:2}), false);
+
+  // string
+  test.same(type.test('2.3'), false);
+  test.same(type.test('string'), false);
+
+  // regexp
+  test.same(type.test(/regexp/), false);
+
+  // null, undefined
+  test.same(type.test(null), false);
+  test.same(type.test(undefined), false);
+
+  // prototype
+  test.same(type.test(person), true);
 
   test.done();
 };

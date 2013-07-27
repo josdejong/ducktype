@@ -67,14 +67,13 @@ var ducktype = require('ducktype');
 ```js
 // basic types
 var number = ducktype(Number);
-number.test(2.3);   // true
-number.test('hi');  // false
-number.test(true);  // false
+number.test(2.3);       // true
+number.test('hi');      // false
+number.test(true);      // false
 
-// built-in types
-ducktype.string.test('string'); // true
-ducktype.string.test(2.3);      // false
-ducktype.number.test(2.3);      // true
+var string = ducktype(String);
+string.test('string');  // true
+string.test(2.3);       // false
 
 // types with options
 var nullableString = ducktype(String, {nullable: true});
@@ -185,7 +184,9 @@ ducktype(type1, type2, ..., options)
 ```
 
 Where:
-- `type` is a type like `Number` or another DuckType.
+- `type` is a basic type or another DuckType.
+  The available basic types are: `Array`, `Boolean`, `Date`, `Function`,
+  `Number`, `Object`, `RegExp`, `String`, `null`, `undefined`.
 - `options` is an object with properties:
   - A string `name` (optional)
   - A boolean `optional` (optional)
@@ -197,42 +198,6 @@ A created ducktype has functions:
   the ducktype, and false otherwise.
 - `validate(object)`. A function which will throw a TypeError when the provided
   object does not match the ducktype.
-
-Example:
-
-```js
-var myType = ducktype(String, {nullable: true});
-myType.test('string');  // true
-myType.test(null);      // true
-myType.validate(2.3);   // will throw a TypeError
-```
-
-
-### functions
-
-The ducktype constructor contains the following built-in types:
-
-- `ducktype.array`
-- `ducktype.boolean`
-- `ducktype.date`
-- `ducktype.function`
-- `ducktype.number`
-- `ducktype.object`
-- `ducktype.regexp`
-- `ducktype.string`
-- `ducktype.null`
-- `ducktype.undefined`
-
-These types can be used as:
-
-```js
-ducktype.number.test(2.3);  // true
-```
-which is equivalent to:
-
-```js
-ducktype(Number).test(2.3); // true
-```
 
 
 ## Test
