@@ -11,6 +11,7 @@ https://github.com/josdejong/ducktype
   the provided function which validates the function arguments agains the
   ducktype.
 - Some minor internal improvements.
+- Removed static ducktypes like `ducktype.number` to simplify the API.
 
 
 ## 2013-07-26, version 1.0.0

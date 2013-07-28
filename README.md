@@ -220,15 +220,15 @@ Where:
   - an array.
     An array can have zero, one or multiple elements which again can be
     a basic type, ducktype, object, or array.
-    - providing an array with zero elements will just return a `ducktype(Array)`.
-    - providing an array with one element will return a ducktype which will
-      test each of tested arrays elements against the given type.
-      Example: `ducktype([Number]).test(1, 2, 3)`.
-    - providing an array with multiple elements will validate the length of
-      the tested array, and validate each of the array elements one to one
-      against the provided types. This can be used to test the number and type
-      of function arguments.
-      Example: `ducktype([Number, String]).test(2, 'str')`.
+    Providing an array with *zero* elements will just return a `ducktype(Array)`.
+    Providing an array with *one* element will return a ducktype which will
+    test each of tested arrays elements against the given type,
+    for example `ducktype([Number]).test(1, 2, 3)`.
+    Providing an array with multiple elements will validate the length of
+    the tested array, and validate each of the array elements one to one
+    against the provided types. This can be used to test the number and type
+    of function arguments. Example: `ducktype([Number, String]).test(2, 'str')`.
+
 - `options` is an object with properties:
   - A string `name` (optional)
   - A boolean `optional` (optional)
