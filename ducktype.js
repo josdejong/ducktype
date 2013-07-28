@@ -50,6 +50,25 @@
     }
   };
 
+  /**
+   * Create a wrapper around the provided function. The wrapper first validates
+   * the function arguments, and throws a TypeError if not correct.
+   * When correct, the function will be executed.
+   * @param {Function} fn
+   * @returns {Function} wrapper
+   */
+  DuckType.prototype.wrap = function (fn) {
+    var validate = this.validate;
+
+    // TODO: test whether this DuckType is an Array
+    // Alter the behavior of the ducktype in case of a test with zero or one arguments
+
+    return function ducktypeWrapper () {
+      validate(arguments);
+      fn.apply(fn, arguments);
+    };
+  };
+
   // The object base contains all basic types
   var base = {};
 
@@ -137,6 +156,167 @@
   // TODO: add types like url, phone number, email, postcode, ...
 
   /**
+   * Create a ducktype handling an object
+   * @param {Object} type
+   * @param {{name: String}} [options]
+   * @returns {*}
+   */
+  function createObject (type, options) {
+    // retrieve the test functions for each of the objects properties
+    var tests = {};
+    var count = 0;
+    for (var prop in type) {
+      if (type.hasOwnProperty(prop)) {
+        tests[prop] = ducktype(type[prop]).test;
+        count++;
+      }
+    }
+
+    if (count == 0) {
+      // empty object
+      return base.object;
+    }
+    else {
+      // non-empty object
+      var isObject = base.object.test;
+      return new DuckType({
+        name: options && options.name || null,
+        test: function test (object) {
+          // test whether we have an object
+          if (!isObject(object)) {
+            return false;
+          }
+
+          // test each of the defined properties
+          for (var prop in tests) {
+            if (tests.hasOwnProperty(prop)) {
+              if (!tests[prop](object[prop])) {
+                return false;
+              }
+            }
+          }
+          return true;
+        }
+      });
+    }
+  }
+
+  /**
+   * Create a ducktype handling an array
+   * @param {Array} type     An array with multiple elements
+   * @param {{name: String}} [options]
+   * @returns {*}
+   */
+  function createArray (type, options) {
+    // multiple childs, fixed length
+    var tests = [];
+    var isArray = base.array.test;
+    for (var i = 0, ii = type.length; i < ii; i++) {
+      tests[i] = ducktype(type[i]).test;
+    }
+
+    // create the ducktype
+    return new DuckType({
+      name: options && options.name || null,
+      test: function test (object) {
+        // test whether object is an array
+        if (!isArray(object)) {
+          return false;
+        }
+
+        // test for correct length
+        if (object.length != tests.length) {
+          return false;
+        }
+
+        // test all childs of the array
+        for (var i = 0, ii = object.length; i < ii; i++) {
+          if (!tests[i](object[i])) {
+            return false;
+          }
+        }
+
+        return true;
+      }
+    });
+
+    // TODO: create an option length, length.min, length.max for the array.
+    //       length can be an integer or a function
+  }
+
+  /**
+   * Create a ducktype handling an array
+   * @param {Array} type    An array containing one element
+   * @param {{name: String}} [options]
+   * @returns {*}
+   */
+  function createArrayRepeat (type, options) {
+    // a single child, repeat for each child
+    var childTest = ducktype(type[0]).test;
+
+    // create the ducktype
+    return new DuckType({
+      name: options && options.name || null,
+      test: function test (object) {
+        // test whether object is an array
+        if (!Array.isArray(object)) {
+          return false;
+        }
+
+        // test all childs of the array
+        for (var i = 0, ii = object.length; i < ii; i++) {
+          if (!childTest(object[i])) {
+            return false;
+          }
+        }
+        return true;
+      }
+    });
+
+    // TODO: create an option length, length.min, length.max for the array.
+    //       length can be an integer or a function
+  }
+
+  /**
+   * Create a ducktype handling a prototype
+   * @param {Object} type   A prototype function
+   * @param {{name: String}} [options]
+   * @returns {*}
+   */
+  function createPrototype (type, options) {
+    return new DuckType({
+      name: options && options.name || null,
+      test: function test (object) {
+        return (object instanceof type);
+      }
+    });
+  }
+
+  /**
+   * Create a ducktype handling a combination of types
+   * @param {Array} types
+   * @param {{name: String}} [options]
+   * @returns {*}
+   */
+  function createCombi (types, options) {
+    var tests = types.map(function (type) {
+      return ducktype(type).test;
+    });
+
+    return new DuckType({
+      name: options && options.name || null,
+      test: function test (object) {
+        for (var i = 0, ii = tests.length; i < ii; i++) {
+          if (tests[i](object)) {
+            return true;
+          }
+        }
+        return false;
+      }
+    });
+  }
+
+  /**
    * Create a new duck type. Syntax:
    *     ducktype(type)
    *     ducktype(type, options)
@@ -156,6 +336,7 @@
   function ducktype (args) {
     // TODO: implement support for ducktype(test: Function) to create a custom type
 
+    var i, ii;
     var newDucktype;
     var type = null;
     var types = null;
@@ -171,8 +352,7 @@
     }
     else {
       types = [];
-      for (var i = 0, ii = arguments.length; i < ii; i++) {
-        // TODO: checking the last argument to be an object is a little tricky
+      for (i = 0, ii = arguments.length; i < ii; i++) {
         if ((i == ii - 1) && arguments[i].constructor === Object) {
           options = arguments[i];
         }
@@ -189,20 +369,7 @@
 
     // create a duck type
     if (types) {
-      tests = types.map(function (type) {
-        return ducktype(type).test;
-      });
-      newDucktype = new DuckType({
-        name: options && options.name || null,
-        test: function test (object) {
-          for (var i = 0, ii = tests.length; i < ii; i++) {
-            if (tests[i](object)) {
-              return true;
-            }
-          }
-          return false;
-        }
-      });
+      newDucktype = createCombi(types, options);
     }
     else if (type === Array) {
       newDucktype = base.array;
@@ -238,75 +405,27 @@
       newDucktype = type; // already a duck type
     }
     else if (Array.isArray(type)) {
-      if (type.length != 1) {
-        throw new Error('Array must contain one element');
+      if (type.length == 0) {
+        newDucktype = base.array;
       }
-      // TODO: allow zero childs -> return types.array in that case
-      // TODO: support multiple childs (so we can test function arguments)
-
-      // create a test for the childs of the array
-      var childTest = ducktype(type[0]).test;
-
-      // create the ducktype
-      newDucktype = new DuckType({
-        name: options && options.name || null,
-        test: function test (object) {
-          // test whether object is an array
-          if (!Array.isArray(object)) {
-            return false;
-          }
-
-          // test all childs of the array
-          for (var i = 0, ii = object.length; i < ii; i++) {
-            if (!childTest(object[i])) {
-              return false;
-            }
-          }
-          return true;
-        }
-      });
+      else if (type.length == 1) {
+        newDucktype = createArrayRepeat(type, options);
+      }
+      else {
+        newDucktype = createArray(type, options);
+      }
     }
     else if ((type instanceof Object) && (type.constructor === Object)) {
-      // retrieve the test functions for each of the objects properties
-      tests = {};
-      for (var prop in type) {
-        if (type.hasOwnProperty(prop)) {
-          tests[prop] = ducktype(type[prop]).test;
-        }
-      }
-
-      newDucktype = new DuckType({
-        name: options && options.name || null,
-        test: function test (object) {
-          // TODO: how to prevent that ducktype({}).test(2) returns true?
-          //       -> or give an error when the given object has no fields?
-          //       -> or in case of no fields, just return ducktype.object?
-          for (var prop in tests) {
-            if (tests.hasOwnProperty(prop)) {
-              if (!tests[prop](object[prop])) {
-                return false;
-              }
-            }
-          }
-          return true;
-        }
-      });
+      newDucktype = createObject(type, options);
     }
     else {
-      // A custom type, typically a prototype function.
-      newDucktype = new DuckType({
-        name: options && options.name || null,
-        test: function test (object) {
-          return (object instanceof type);
-        }
-      });
+      newDucktype = createPrototype(type, options);
     }
 
     // process options
     if (options && ((options.optional !== undefined) || (options.nullable !== undefined))) {
       var optional = (options.optional !== undefined) ? options.optional : false;
       var nullable = (options.nullable !== undefined) ? options.nullable : false;
-      // TODO: create an option strict
 
       test = newDucktype.test;
       newDucktype = new DuckType({
@@ -326,8 +445,6 @@
   // TODO: implement a parser implements js type annotations
 
   // TODO: implement non-strict tests and an option strict
-
-  // TODO: how to accept a functions arguments as Array?
 
   /**
    * Shims for older JavaScript engines

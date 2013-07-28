@@ -170,6 +170,33 @@ family.test({
 }); // false
 ```
 
+### Function arguments
+
+```js
+var type = ducktype([Number, Number]);
+
+function add (a, b) {
+  type.validate(arguments);
+  return a + b;
+}
+
+var sum = add(2, 3);        // ok
+var sum = add(2, 'string'); // will throw a TypeError
+```
+
+Alternatively, a ducktype wrapper can be created which validates the
+function arguments against the ducktype:
+
+```js
+var add = ducktype([Number, Number]).wrap(function add (a, b) {
+  return a + b;
+});
+
+var sum = add(2, 3);        // ok
+var sum = add(2, 'string'); // will throw a TypeError
+```
+
+
 ## API
 
 ### construction
@@ -184,9 +211,24 @@ ducktype(type1, type2, ..., options)
 ```
 
 Where:
-- `type` is a basic type or another DuckType.
-  The available basic types are: `Array`, `Boolean`, `Date`, `Function`,
-  `Number`, `Object`, `RegExp`, `String`, `null`, `undefined`.
+- `type` can be:
+  - a basic type. Choose from `Array`, `Boolean`, `Date`, `Function`, `Number`,
+    `Object`, `RegExp`, `String`, `null`, `undefined`.
+  - another ducktype.
+  - an object. All properties of the object will be checked. Each property
+    again can be a basic type, ducktype, object, or array.
+  - an array.
+    An array can have zero, one or multiple elements which again can be
+    a basic type, ducktype, object, or array.
+    - providing an array with zero elements will just return a `ducktype(Array)`.
+    - providing an array with one element will return a ducktype which will
+      test each of tested arrays elements against the given type.
+      Example: `ducktype([Number]).test(1, 2, 3)`.
+    - providing an array with multiple elements will validate the length of
+      the tested array, and validate each of the array elements one to one
+      against the provided types. This can be used to test the number and type
+      of function arguments.
+      Example: `ducktype([Number, String]).test(2, 'str')`.
 - `options` is an object with properties:
   - A string `name` (optional)
   - A boolean `optional` (optional)
@@ -198,6 +240,10 @@ A created ducktype has functions:
   the ducktype, and false otherwise.
 - `validate(object)`. A function which will throw a TypeError when the provided
   object does not match the ducktype.
+- `wrap(fn)`. Creates a wrapper function around the provided function, which
+  validates the function arguments against the ducktype.
+  Only applicable for ducktypes containing an array, as the ducktype is tested
+  against an array with the function arguments.
 
 
 ## Test

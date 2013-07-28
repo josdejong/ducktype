@@ -645,6 +645,22 @@ exports['Object - basic'] = function(test) {
   test.done();
 };
 
+
+exports['Object - empty'] = function(test) {
+  var type = ducktype({});
+
+  test.same(type.test({a: 'hi', b: 23}), true);
+  test.same(type.test({}), true);
+
+  test.same(type.test(2), false);
+  test.same(type.test('str'), false);
+  test.same(type.test(new Date()), false);
+  test.same(type.test([1,2,3]), false);
+
+  test.done();
+};
+
+
 exports['Object - nesting'] = function(test) {
   var type = ducktype({
     a: String,
@@ -715,6 +731,73 @@ exports['Array - with object'] = function(test) {
   test.same(type.test([{a: 's', b: 2}, {a: 's', b: 2}]), true);
   test.same(type.test([{a: 's', b: 2}, {a: 's', b: 's'}]), false);
   test.same(type.test([{a: 's', b: 2}, {a: /regexp/, b: 2}]), false);
+
+  test.done();
+};
+
+exports['Array - undefined childs'] = function(test) {
+  var type = ducktype([]);
+
+  test.same(type.test([]), true);
+  test.same(type.test([{a: 's', b: 2}]), true);
+  test.same(type.test([{a: 's', b: 2}, {a: 's', b: 2}]), true);
+  test.same(type.test([{a: 's', b: 2}, {a: 's', b: 's'}]), true);
+  test.same(type.test([{a: 's', b: 2}, {a: /regexp/, b: 2}]), true);
+
+  test.done();
+};
+
+exports['Array - multiple childs'] = function(test) {
+  var type = ducktype([Number, String]);
+
+  test.same(type.test([]), false);
+  test.same(type.test([2]), false);
+  test.same(type.test([2, 'string']), true);
+  test.same(type.test([2, 2]), false);
+  test.same(type.test([false, 'string']), false);
+  test.same(type.test([2, 'string', 3]), false);
+
+  test.done();
+};
+
+exports['Function arguments'] = function(test) {
+  var type = ducktype([Number, String]);
+
+  (function fn () {
+    test.same(type.test(arguments), true);
+  })(2, 'string');
+
+  (function fn () {
+    test.same(type.test(arguments), false);
+  })(2, 'string', 3);
+
+  (function fn () {
+    test.same(type.test(arguments), false);
+  })(2, 3);
+
+  test.done();
+};
+
+exports['Function wrapper'] = function(test) {
+  var add = ducktype([Number, Number]).wrap(function (a, b) {
+    return a + b;
+  });
+
+  test.ok(function () {
+    add(2, 3);
+  });
+
+  test.throws(function () {
+    add(2, 'string');
+  }, TypeError);
+
+  test.throws(function () {
+    add(2, 3, 4);
+  }, TypeError);
+
+  test.throws(function () {
+    add(2);
+  }, TypeError);
 
   test.done();
 };

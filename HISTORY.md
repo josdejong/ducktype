@@ -3,6 +3,16 @@
 https://github.com/josdejong/ducktype
 
 
+## version 1.1.0
+
+- Support for creating ducktype arrays with multiple elements,
+  which can be used for example to test function arguments.
+- Ducktype has a new function `wrap(fn)`, which creates a wrapper around
+  the provided function which validates the function arguments agains the
+  ducktype.
+- Some minor internal improvements.
+
+
 ## 2013-07-26, version 1.0.0
 
 - Added support for structured arrays, like `ducktype([Number])`.
