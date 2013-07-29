@@ -1,6 +1,6 @@
 # ducktype
 
-Flexible data validation using a ducktype interface. For JavaScript and Node.js.
+Flexible data validation using a duck type interface. For JavaScript and Node.js.
 
 As JavaScript is a loosely typed language, any variable can contain any
 type of data, and any type of data can be passed as arguments any function.
@@ -212,19 +212,19 @@ ducktype(type1, type2, ..., options)
 
 Where:
 - `type` can be:
-  - a basic type. Choose from `Array`, `Boolean`, `Date`, `Function`, `Number`,
+  - A basic type. Choose from `Array`, `Boolean`, `Date`, `Function`, `Number`,
     `Object`, `RegExp`, `String`, `null`, `undefined`.
-  - another ducktype.
-  - an object. All properties of the object will be checked. Each property
-    again can be a basic type, ducktype, object, or array.
-  - an array.
-    An array can have zero, one or multiple elements which again can be
+  - Another ducktype.
+  - An object. All properties of the object will be checked. Each property
+    can be a basic type, ducktype, object, or array.
+  - An array.
+    An array can have zero, one or multiple elements which can be
     a basic type, ducktype, object, or array.
     Providing an array with *zero* elements will just return a `ducktype(Array)`.
     Providing an array with *one* element will return a ducktype which will
     test each of tested arrays elements against the given type,
     for example `ducktype([Number]).test(1, 2, 3)`.
-    Providing an array with multiple elements will validate the length of
+    Providing an array with *multiple* elements will validate the length of
     the tested array, and validate each of the array elements one to one
     against the provided types. This can be used to test the number and type
     of function arguments. Example: `ducktype([Number, String]).test(2, 'str')`.
@@ -259,6 +259,7 @@ To execute tests for the library, run:
 - Implement extra options for specific types:
   - Number: integer, min, max, finite, odd, even, positive, negative, nan, ...
   - String: lowercase, uppercase, alpha, alphanumeric, empty, ...
+  - Array: length, length.min, length.max, ...
 - Implement a parser accepting a string describing a type in
   [annotations](https://developers.google.com/closure/compiler/docs/js-for-compiler#types).
 - Implement support to define your own tests for custom types.

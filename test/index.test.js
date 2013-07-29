@@ -8,7 +8,7 @@
 var ducktype = require('../ducktype.js');
 
 
-// create a custom prototype
+// create a prototype
 function Person (name, age) {
   this.name = name;
   this.age = age;
@@ -267,6 +267,7 @@ exports['Basic types - Object'] = function(test) {
   test.done();
 };
 
+
 exports['Basic types - String'] = function(test) {
   var type = ducktype(String);
 
@@ -434,7 +435,8 @@ exports['Basic types - undefined'] = function(test) {
   test.done();
 };
 
-exports['Basic types - custom prototype'] = function (test) {
+
+exports['Basic types - prototype'] = function (test) {
   var type = ducktype(Person);
 
   // array
@@ -592,6 +594,7 @@ exports['Options - nullable'] = function(test) {
   test.done();
 };
 
+
 exports['Options - optional'] = function(test) {
   var type = ducktype(Number, {optional: true});
 
@@ -680,6 +683,7 @@ exports['Object - nesting'] = function(test) {
   test.done();
 };
 
+
 exports['Object - nesting (2)'] = function(test) {
   var type = ducktype({
     a: String,
@@ -693,6 +697,7 @@ exports['Object - nesting (2)'] = function(test) {
 
   test.done();
 };
+
 
 exports['Object - optional fields'] = function(test) {
   var type = ducktype({
@@ -708,6 +713,7 @@ exports['Object - optional fields'] = function(test) {
   test.done();
 };
 
+
 exports['Array - basic'] = function(test) {
   var type = ducktype([Number]);
   test.same(type.test([2, 4, 5]), true);
@@ -717,6 +723,7 @@ exports['Array - basic'] = function(test) {
 
   test.done();
 };
+
 
 exports['Array - with object'] = function(test) {
   var type = ducktype([
@@ -735,6 +742,7 @@ exports['Array - with object'] = function(test) {
   test.done();
 };
 
+
 exports['Array - undefined childs'] = function(test) {
   var type = ducktype([]);
 
@@ -747,6 +755,7 @@ exports['Array - undefined childs'] = function(test) {
   test.done();
 };
 
+
 exports['Array - multiple childs'] = function(test) {
   var type = ducktype([Number, String]);
 
@@ -756,48 +765,6 @@ exports['Array - multiple childs'] = function(test) {
   test.same(type.test([2, 2]), false);
   test.same(type.test([false, 'string']), false);
   test.same(type.test([2, 'string', 3]), false);
-
-  test.done();
-};
-
-exports['Function arguments'] = function(test) {
-  var type = ducktype([Number, String]);
-
-  (function fn () {
-    test.same(type.test(arguments), true);
-  })(2, 'string');
-
-  (function fn () {
-    test.same(type.test(arguments), false);
-  })(2, 'string', 3);
-
-  (function fn () {
-    test.same(type.test(arguments), false);
-  })(2, 3);
-
-  test.done();
-};
-
-exports['Function wrapper'] = function(test) {
-  var add = ducktype([Number, Number]).wrap(function (a, b) {
-    return a + b;
-  });
-
-  test.ok(function () {
-    add(2, 3);
-  });
-
-  test.throws(function () {
-    add(2, 'string');
-  }, TypeError);
-
-  test.throws(function () {
-    add(2, 3, 4);
-  }, TypeError);
-
-  test.throws(function () {
-    add(2);
-  }, TypeError);
 
   test.done();
 };
@@ -827,6 +794,50 @@ exports['Object with Array with Object'] = function (test) {
       }
     ]
   }), true);
+
+  test.done();
+};
+
+
+exports['Function arguments'] = function(test) {
+  var type = ducktype([Number, String]);
+
+  (function fn () {
+    test.same(type.test(arguments), true);
+  })(2, 'string');
+
+  (function fn () {
+    test.same(type.test(arguments), false);
+  })(2, 'string', 3);
+
+  (function fn () {
+    test.same(type.test(arguments), false);
+  })(2, 3);
+
+  test.done();
+};
+
+
+exports['Function wrapper'] = function(test) {
+  var add = ducktype([Number, Number]).wrap(function (a, b) {
+    return a + b;
+  });
+
+  test.ok(function () {
+    add(2, 3);
+  });
+
+  test.throws(function () {
+    add(2, 'string');
+  }, TypeError);
+
+  test.throws(function () {
+    add(2, 3, 4);
+  }, TypeError);
+
+  test.throws(function () {
+    add(2);
+  }, TypeError);
 
   test.done();
 };

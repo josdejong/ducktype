@@ -69,11 +69,11 @@
     };
   };
 
-  // The object base contains all basic types
-  var base = {};
+  // The object basic contains all basic types
+  var basic = {};
 
   // type Array
-  base.array = new DuckType({
+  basic.array = new DuckType({
     name: 'Array',
     test: function isArray(object) {
       return (Array.isArray(object) ||
@@ -82,7 +82,7 @@
   });
 
   // type Boolean
-  base.boolean = new DuckType({
+  basic.boolean = new DuckType({
     name: 'Boolean',
     test: function isBoolean(object) {
       return ((object instanceof Boolean) || (typeof object === 'boolean'));
@@ -90,7 +90,7 @@
   });
 
   // type Date
-  base.date = new DuckType({
+  basic.date = new DuckType({
     name: 'Date',
     test: function isDate(object) {
       return (object instanceof Date);
@@ -98,7 +98,7 @@
   });
 
   // type Function
-  base.function = new DuckType({
+  basic.function = new DuckType({
     name: 'Function',
     test: function isFunction(object) {
       return ((object instanceof Function) || (typeof object === 'function'));
@@ -106,7 +106,7 @@
   });
 
   // type Number
-  base.number = new DuckType({
+  basic.number = new DuckType({
     name: 'Number',
     test: function isNumber(object) {
       return ((object instanceof Number) || (typeof object === 'number'));
@@ -114,7 +114,7 @@
   });
 
   // type Object
-  base.object = new DuckType({
+  basic.object = new DuckType({
     name: 'Object',
     test: function isObject(object) {
       return ((object instanceof Object) && (object.constructor === Object));
@@ -122,7 +122,7 @@
   });
 
   // type RegExp
-  base.regexp = new DuckType({
+  basic.regexp = new DuckType({
     name: 'RegExp',
     test: function isRegExp(object) {
       return (object instanceof RegExp);
@@ -130,7 +130,7 @@
   });
 
   // type String
-  base.string = new DuckType({
+  basic.string = new DuckType({
     name: 'String',
     test: function isString(object) {
       return ((object instanceof String) || (typeof object === 'string'));
@@ -138,7 +138,7 @@
   });
 
   // type null
-  base['null'] = new DuckType({
+  basic['null'] = new DuckType({
     name: 'null',
     test: function isNull(object) {
       return (object === null);
@@ -146,7 +146,7 @@
   });
 
   // type undefined
-  base['undefined'] = new DuckType({
+  basic['undefined'] = new DuckType({
     name: 'undefined',
     test: function isUndefined(object) {
       return (object === undefined);
@@ -164,41 +164,33 @@
   function createObject (type, options) {
     // retrieve the test functions for each of the objects properties
     var tests = {};
-    var count = 0;
     for (var prop in type) {
       if (type.hasOwnProperty(prop)) {
         tests[prop] = ducktype(type[prop]).test;
-        count++;
       }
     }
 
-    if (count == 0) {
-      // empty object
-      return base.object;
-    }
-    else {
-      // non-empty object
-      var isObject = base.object.test;
-      return new DuckType({
-        name: options && options.name || null,
-        test: function test (object) {
-          // test whether we have an object
-          if (!isObject(object)) {
-            return false;
-          }
+    // non-empty object
+    var isObject = basic.object.test;
+    return new DuckType({
+      name: options && options.name || null,
+      test: function test (object) {
+        // test whether we have an object
+        if (!isObject(object)) {
+          return false;
+        }
 
-          // test each of the defined properties
-          for (var prop in tests) {
-            if (tests.hasOwnProperty(prop)) {
-              if (!tests[prop](object[prop])) {
-                return false;
-              }
+        // test each of the defined properties
+        for (var prop in tests) {
+          if (tests.hasOwnProperty(prop)) {
+            if (!tests[prop](object[prop])) {
+              return false;
             }
           }
-          return true;
         }
-      });
-    }
+        return true;
+      }
+    });
   }
 
   /**
@@ -210,7 +202,7 @@
   function createArray (type, options) {
     // multiple childs, fixed length
     var tests = [];
-    var isArray = base.array.test;
+    var isArray = basic.array.test;
     for (var i = 0, ii = type.length; i < ii; i++) {
       tests[i] = ducktype(type[i]).test;
     }
@@ -335,13 +327,14 @@
    */
   function ducktype (args) {
     // TODO: implement support for ducktype(test: Function) to create a custom type
+    // TODO: implement support for ducktype(test: RegExp) to create a custom type
 
     var i, ii;
     var newDucktype;
     var type = null;
     var types = null;
     var options = null;
-    var test, tests;
+    var test;
 
     // process arguments
     if (arguments.length == 0) {
@@ -372,41 +365,41 @@
       newDucktype = createCombi(types, options);
     }
     else if (type === Array) {
-      newDucktype = base.array;
+      newDucktype = basic.array;
     }
     else if (type === Boolean) {
-      newDucktype = base.boolean;
+      newDucktype = basic.boolean;
     }
     else if (type === Date) {
-      newDucktype = base.date;
+      newDucktype = basic.date;
     }
     else if (type === Function) {
-      newDucktype = base.function;
+      newDucktype = basic.function;
     }
     else if (type === Number) {
-      newDucktype = base.number;
+      newDucktype = basic.number;
     }
     else if (type === Object) {
-      newDucktype = base.object;
+      newDucktype = basic.object;
     }
     else if (type === String) {
-      newDucktype = base.string;
+      newDucktype = basic.string;
     }
     else if (type === RegExp) {
-      newDucktype = base.regexp;
+      newDucktype = basic.regexp;
     }
     else if (type === null) {
-      newDucktype = base['null'];
+      newDucktype = basic['null'];
     }
     else if (type === undefined) {
-      newDucktype = base['undefined'];
+      newDucktype = basic['undefined'];
     }
     else if (type instanceof DuckType) {
       newDucktype = type; // already a duck type
     }
     else if (Array.isArray(type)) {
       if (type.length == 0) {
-        newDucktype = base.array;
+        newDucktype = basic.array;
       }
       else if (type.length == 1) {
         newDucktype = createArrayRepeat(type, options);
@@ -416,7 +409,12 @@
       }
     }
     else if ((type instanceof Object) && (type.constructor === Object)) {
-      newDucktype = createObject(type, options);
+      if (Object.keys(type).length == 0) {
+        newDucktype = basic.object;
+      }
+      else {
+        newDucktype = createObject(type, options);
+      }
     }
     else {
       newDucktype = createPrototype(type, options);
@@ -448,12 +446,48 @@
 
   /**
    * Shims for older JavaScript engines
-   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray
    */
+
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray
   if(!Array.isArray) {
     Array.isArray = function (vArg) {
       return Object.prototype.toString.call(vArg) === '[object Array]';
     };
+  }
+
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
+  if (!Object.keys) {
+    Object.keys = (function () {
+      var hasOwnProperty = Object.prototype.hasOwnProperty,
+          hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
+          dontEnums = [
+            'toString',
+            'toLocaleString',
+            'valueOf',
+            'hasOwnProperty',
+            'isPrototypeOf',
+            'propertyIsEnumerable',
+            'constructor'
+          ],
+          dontEnumsLength = dontEnums.length;
+
+      return function (obj) {
+        if (typeof obj !== 'object' && typeof obj !== 'function' || obj === null) throw new TypeError('Object.keys called on non-object');
+
+        var result = [];
+
+        for (var prop in obj) {
+          if (hasOwnProperty.call(obj, prop)) result.push(prop);
+        }
+
+        if (hasDontEnumBug) {
+          for (var i=0; i < dontEnumsLength; i++) {
+            if (hasOwnProperty.call(obj, dontEnums[i])) result.push(dontEnums[i]);
+          }
+        }
+        return result;
+      };
+    })();
   }
 
   /**
