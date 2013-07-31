@@ -440,6 +440,13 @@
     return newDucktype;
   }
 
+  // attach each of the basic types to the ducktype function
+  for (var type in basic) {
+    if (basic.hasOwnProperty(type)) {
+      ducktype[type] = basic[type];
+    }
+  }
+
   // TODO: implement a parser implements js type annotations
 
   // TODO: implement non-strict tests and an option strict

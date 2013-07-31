@@ -1,6 +1,6 @@
 {
   "name": "ducktype",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Flexible data validation using a duck type interface",
   "author": "Jos de Jong <wjosdejong@gmail.com>",
   "contributors": [

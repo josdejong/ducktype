@@ -65,17 +65,21 @@ var ducktype = require('ducktype');
 ### Basic types
 
 ```js
-// basic types
-var number = ducktype(Number);
-number.test(2.3);       // true
-number.test('hi');      // false
-number.test(true);      // false
+// use built-in types
+ducktype.number.test(2.3);      // true
+ducktype.number.test('hi');     // false
+ducktype.number.test(true);     // false
+ducktype.date.test(new Date()); // true
+ducktype.date.test(2.3);        // false
+ducktype.string.test('hello');  // true
 
-var string = ducktype(String);
-string.test('string');  // true
-string.test(2.3);       // false
+// create a ducktype
+var type = ducktype(Number);
+type.test(2.3);                 // true
+type.test('hi');                // false
+type.test(true);                // false
 
-// types with options
+// create a ducktype with options
 var nullableString = ducktype(String, {nullable: true});
 nullableString.test('string');  // true
 nullableString.test(null);      // true
@@ -244,6 +248,28 @@ A created ducktype has functions:
   validates the function arguments against the ducktype.
   Only applicable for ducktypes containing an array, as the ducktype is tested
   against an array with the function arguments.
+
+### Built-in types
+
+Ducktype comes with a set of built-in types:
+
+- `ducktype.array`
+- `ducktype.boolean`
+- `ducktype.date`
+- `ducktype.function`
+- `ducktype.number`
+- `ducktype.object`
+- `ducktype.regexp`
+- `ducktype.string`
+- `ducktype.null`
+- `ducktype.undefined`
+
+The built-in types can be used as:
+
+```js
+ducktype.number.test(2.3); // true
+ducktype.string.test(2.3); // false
+```
 
 
 ## Test
