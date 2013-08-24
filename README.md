@@ -1,24 +1,44 @@
 # ducktype
 
-Flexible data validation using a duck type interface. For JavaScript and Node.js.
+Flexible data validation using a duck type interface for JavaScript and Node.js.
 
 As JavaScript is a loosely typed language, any variable can contain any
-type of data, and any type of data can be passed as arguments any function.
+type of data, and any type of data can be passed as arguments to any function.
 When dealing with data inputs coming from external sources, there is a need
 to validate the type and contents of the data. Ducktype offers an easy way
 to validate both basic data types as well as complex structured data types
 in a flexible way.
 
-```js
-var ducktype = require('ducktype');
+Replace this kind of type checking mess:
 
-var person = ducktype({
+```js
+function save (contact) {
+  if (contact && isInteger(contact.id) && (contact.id > 0) && isString(contact.name) &&
+      contact.address && isString(contact.address.city) && isString(contact.address.street)) {
+    // ... save contact
+  }
+  else {
+    throw new Error('Invalid contact');
+  }
+}
+```
+
+with this:
+
+```js
+var contactType = ducktype({
+  id: ducktype(Number, {integer: true, min: 0}),
   name: String,
-  age: Number
+  address: {
+    city: String,
+    street: String,
+  }
 });
 
-person.test({name: 'John', age: 34}); // true
-person.test({name: 'Mary'});          // false
+function save (contact) {
+  contactType.validate(contact);
+  // ... save contact
+}
 ```
 
 
@@ -256,6 +276,7 @@ Ducktype comes with a set of built-in types:
 - `ducktype.array`
 - `ducktype.boolean`
 - `ducktype.date`
+- `ducktype.email`
 - `ducktype.function`
 - `ducktype.number`
 - `ducktype.object`
@@ -263,6 +284,7 @@ Ducktype comes with a set of built-in types:
 - `ducktype.string`
 - `ducktype.null`
 - `ducktype.undefined`
+- `ducktype.url`
 
 The built-in types can be used as:
 

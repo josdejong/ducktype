@@ -31,7 +31,8 @@
   }
 
   /**
-   * Test whether an object matches this DuckType
+   * Test whether an object matches this DuckType.
+   * This function should be overwritten by the DuckType implementation
    * @param {*} object
    * @returns {boolean} match
    */
@@ -153,6 +154,25 @@
     }
   });
 
+  // type url
+  // http://regexlib.com/REDetails.aspx?regexp_id=2841
+  var urlRegExp = /^(ht|f)tp(s?):\/\/(([a-zA-Z0-9\-\._]+(\.[a-zA-Z0-9\-\._]+)+)|localhost)(\/?)([a-zA-Z0-9\-\.\?,'\/\\\+&amp;%\$#_]*)?([\d\w\.\/%\+\-=&amp;\?:\\&quot;',\|~;]*)$/;
+  basic.url = new DuckType({
+    name: 'url',
+    test: function (object) {
+      return urlRegExp.test(object);
+    }
+  });
+
+  // type url
+  // http://regexlib.com/REDetails.aspx?regexp_id=1448
+  var emailRegExp = /^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/;
+  basic.email = new DuckType({
+    name: 'email',
+    test: function (object) {
+      return emailRegExp.test(object);
+    }
+  });
   // TODO: add types like url, phone number, email, postcode, ...
 
   /**
@@ -309,6 +329,39 @@
   }
 
   /**
+   * Create a ducktype from a test function
+   * @param {Function} test   A test function, returning true when a provided
+   *                          object matches, or else returns false.
+   * @param {{name: String}} [options]
+   * @returns {*}
+   */
+  function createFunction (test, options) {
+    return new DuckType({
+      name: options && options.name || null,
+      test: test
+    });
+  }
+
+  /**
+   * Create a ducktype from a regular expression. The created ducktype
+   * will check whether the provided object is a String,
+   * and matches with the regular expression
+   * @param {RegExp} regexp   A regular expression
+   * @param {{name: String}} [options]
+   * @returns {*}
+   */
+  function createRegExp (regexp, options) {
+    return new DuckType({
+      name: options && options.name || null,
+      test: function (object) {
+        return ((object instanceof String) || typeof(object) === 'string') && regexp.test(object);
+      }
+    });
+  }
+
+  // TODO: document ducktype.construct(function) and ducktype.construct(regexp)
+
+  /**
    * Create a new duck type. Syntax:
    *     ducktype(type)
    *     ducktype(type, options)
@@ -439,6 +492,25 @@
     // return the created ducktype
     return newDucktype;
   }
+
+  /**
+   * Create a DuckType from a test function or regular expression
+   * @param {Function | RegExp} test
+   * @return {DuckType} ducktype
+   */
+  ducktype.construct = function construct(test) {
+    if (basic.function.test(test)) {
+      // function
+      return createFunction(test);
+    }
+    else if (basic.regexp.test(test)) {
+      // regexp
+      return createRegExp(test);
+    }
+    else {
+      throw new TypeError('Function or RegExp expected');
+    }
+  };
 
   // attach each of the basic types to the ducktype function
   for (var type in basic) {

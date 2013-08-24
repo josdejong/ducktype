@@ -841,3 +841,134 @@ exports['Function wrapper'] = function(test) {
 
   test.done();
 };
+
+exports['Construct function'] = function(test) {
+  var ok = ducktype.construct(function (object) {
+    return (object === 'OK');
+  });
+
+  test.same(ok.test('OK'), true);
+  test.same(ok.test('ok'), false);
+  test.same(ok.test(2), false);
+  test.same(ok.test(null), false);
+  test.same(ok.test(undefined), false);
+  test.same(ok.test(), false);
+
+  test.done();
+};
+
+exports['Construct regexp'] = function(test) {
+  var ok = ducktype.construct(/^OK$/);
+
+  test.same(ok.test('OK'), true);
+  test.same(ok.test('ok'), false);
+  test.same(ok.test(2), false);
+  test.same(ok.test(null), false);
+  test.same(ok.test(undefined), false);
+  test.same(ok.test(), false);
+
+  test.done();
+};
+
+
+// TODO: test the build-in types
+
+
+exports['url'] = function (test) {
+  var type = ducktype.url;
+
+  // array
+  test.same(type.test([2,3,4]), false);
+
+  // boolean
+  test.same(type.test(true), false);
+  test.same(type.test(false), false);
+
+  // date
+  test.same(type.test(new Date()), false);
+
+  // function
+  test.same(type.test(function () {}), false);
+
+  // number
+  test.same(type.test(0), false);
+  test.same(type.test(2.3), false);
+  test.same(type.test(NaN), false);
+
+  // object
+  test.same(type.test({a:2}), false);
+
+  // string
+  test.same(type.test('2.3'), false);
+  test.same(type.test('string'), false);
+
+  // regexp
+  test.same(type.test(/regexp/), false);
+
+  // null, undefined
+  test.same(type.test(null), false);
+  test.same(type.test(undefined), false);
+
+  // type
+  test.same(type.test('http://google.com'), true);
+  test.same(type.test('http://www.google.com'), true);
+  test.same(type.test('http://google.nl'), true);
+  test.same(type.test('ftp://mysite.com'), true);
+  test.same(type.test('http://mysite.com:8080/bla'), true);
+  test.same(type.test('http:/example.com'), false);
+  test.same(type.test('http//example.com'), false);
+  test.same(type.test('http://example'), false);
+  test.same(type.test('www.google.com'), false);
+
+  test.done();
+};
+
+exports['email'] = function (test) {
+  var type = ducktype.email;
+
+  // array
+  test.same(type.test([2,3,4]), false);
+
+  // boolean
+  test.same(type.test(true), false);
+  test.same(type.test(false), false);
+
+  // date
+  test.same(type.test(new Date()), false);
+
+  // function
+  test.same(type.test(function () {}), false);
+
+  // number
+  test.same(type.test(0), false);
+  test.same(type.test(2.3), false);
+  test.same(type.test(NaN), false);
+
+  // object
+  test.same(type.test({a:2}), false);
+
+  // string
+  test.same(type.test('2.3'), false);
+  test.same(type.test('string'), false);
+
+  // regexp
+  test.same(type.test(/regexp/), false);
+
+  // null, undefined
+  test.same(type.test(null), false);
+  test.same(type.test(undefined), false);
+
+  // type
+  test.same(type.test('name@domain.com'), true);
+  test.same(type.test('first.last@domain.com'), true);
+  test.same(type.test('first_last@domain.com'), true);
+  test.same(type.test('@domain.com'), false);
+  test.same(type.test('domain.com'), false);
+  test.same(type.test('http://domain.com'), false);
+  test.same(type.test('fist last@domain.com'), false);
+  test.same(type.test('name@domain'), false);
+
+  test.done();
+};
+
+
