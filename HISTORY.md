@@ -3,6 +3,12 @@
 https://github.com/josdejong/ducktype
 
 
+## not yet released, version 1.2.0
+
+- Implemented types `ducktype.email`, `ducktype.integer`, `ducktype.url`.
+- Implemented options `integer`, `min`, `max`. Only applicable for numbers.
+
+
 ## 2013-07-31, version 1.1.0
 
 - Support for creating ducktype arrays containing a fixed number of elements

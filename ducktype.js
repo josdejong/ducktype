@@ -164,7 +164,7 @@
     }
   });
 
-  // type url
+  // type email
   // http://regexlib.com/REDetails.aspx?regexp_id=1448
   var emailRegExp = /^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/;
   basic.email = new DuckType({
@@ -173,7 +173,17 @@
       return emailRegExp.test(object);
     }
   });
-  // TODO: add types like url, phone number, email, postcode, ...
+
+  // type integer
+  basic['integer'] = new DuckType({
+    name: 'integer',
+    test: function isInteger (object) {
+      return ((object instanceof Number) || (typeof object === 'number')) &&
+          (object === parseInt(object));
+    }
+  });
+
+  // TODO: add types like phone number, postcode, ...
 
   /**
    * Create a ducktype handling an object
@@ -474,19 +484,66 @@
     }
 
     // process options
-    if (options && ((options.optional !== undefined) || (options.nullable !== undefined))) {
-      var optional = (options.optional !== undefined) ? options.optional : false;
-      var nullable = (options.nullable !== undefined) ? options.nullable : false;
-
+    if (options) {
       test = newDucktype.test;
-      newDucktype = new DuckType({
-        name: options && options.name || newDucktype.name || null,
-        test: function (object) {
+      var constructedTest = null;
+      var tests = [];
+      var name = options.name || newDucktype.name || null;
+
+      if ((options.optional !== undefined) || (options.nullable !== undefined)) {
+        var optional = (options.optional !== undefined) ? options.optional : false;
+        var nullable = (options.nullable !== undefined) ? options.nullable : false;
+
+        constructedTest = function (object) {
           return test(object) ||
-              ((object === null) && nullable) ||
-              ((object === undefined) && optional);
-        }
-      });
+              (nullable && (object === null)) ||
+              (optional && (object === undefined));
+        };
+        tests.push(constructedTest);
+      }
+      else {
+        tests.push(test);
+      }
+
+      if (options.integer === true) {
+        tests.push(function test_integer (object) {
+          return (object === parseInt(object));
+        });
+      }
+
+      if (options.min !== undefined) {
+        tests.push(function test_min (object) {
+          return (object >= options.min);
+        });
+      }
+
+      if (options.max !== undefined) {
+        tests.push(function test_max (object) {
+          return (object <= options.max);
+        });
+      }
+
+      if (tests.length == 1) {
+        // a single test
+        newDucktype = new DuckType({
+          name: name,
+          test: tests[0]
+        });
+      }
+      else {
+        // multiple tests
+        newDucktype = new DuckType({
+          name: name,
+          test: function (object) {
+            for (var i = 0, ii = tests.length; i < ii; i++) {
+              if (!tests[i](object)) {
+                return false;
+              }
+            }
+            return true;
+          }
+        });
+      }
     }
 
     // return the created ducktype
@@ -495,17 +552,28 @@
 
   /**
    * Create a DuckType from a test function or regular expression
+   * @param {String} [name]
    * @param {Function | RegExp} test
    * @return {DuckType} ducktype
    */
-  ducktype.construct = function construct(test) {
+  // TODO: document ducktype.construct
+  ducktype.construct = function construct(name, test) {
+    if (arguments.length == 1) {
+      test = arguments[0];
+      name = null;
+    }
+
     if (basic.function.test(test)) {
       // function
-      return createFunction(test);
+      return createFunction(test, {
+        name: name
+      });
     }
     else if (basic.regexp.test(test)) {
       // regexp
-      return createRegExp(test);
+      return createRegExp(test, {
+        name: name
+      });
     }
     else {
       throw new TypeError('Function or RegExp expected');

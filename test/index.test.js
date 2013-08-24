@@ -634,6 +634,79 @@ exports['Options - optional'] = function(test) {
 };
 
 
+exports['Options - integer'] = function(test) {
+  var type = ducktype(Number, {
+    integer: true
+  });
+
+  test.same(type.test(0), true);
+  test.same(type.test(2.3), false);
+  test.same(type.test(3), true);
+  test.same(type.test(-3), true);
+  test.same(type.test(3e2), true);
+  test.same(type.test("23"), false);
+  test.same(type.test("str"), false);
+
+  test.done();
+};
+
+exports['Options - min'] = function(test) {
+  var type = ducktype(Number, {
+    min: 5
+  });
+
+  test.same(type.test(0), false);
+  test.same(type.test(5.3), true);
+  test.same(type.test(5), true);
+  test.same(type.test(new Date()), false);
+  test.same(type.test(-5), false);
+  test.same(type.test("23"), false);
+  test.same(type.test("str"), false);
+
+  test.done();
+};
+
+
+exports['Options - max'] = function(test) {
+  var type = ducktype(Number, {
+    max: 5
+  });
+
+  test.same(type.test(0), true);
+  test.same(type.test(5.3), false);
+  test.same(type.test(5), true);
+  test.same(type.test(-5), true);
+  test.same(type.test(new Date()), false);
+  test.same(type.test("23"), false);
+  test.same(type.test("str"), false);
+
+  test.done();
+};
+
+
+exports['Options - min, max, integer'] = function(test) {
+  var type = ducktype(Number, {
+    integer: true,
+    min: 1,
+    max: 10
+  });
+
+  test.same(type.test(0), false);
+  test.same(type.test(1), true);
+  test.same(type.test(2), true);
+  test.same(type.test(9), true);
+  test.same(type.test(10), true);
+  test.same(type.test(11), false);
+  test.same(type.test(5.3), false);
+  test.same(type.test(-5), false);
+  test.same(type.test(new Date()), false);
+  test.same(type.test("23"), false);
+  test.same(type.test("str"), false);
+
+  test.done();
+};
+
+
 exports['Object - basic'] = function(test) {
   var type = ducktype({a: String, b: Number});
   test.same(type.test({a: 'hi', b: 23}), true);
@@ -871,50 +944,15 @@ exports['Construct regexp'] = function(test) {
 };
 
 
-// TODO: test the build-in types
-
-
 exports['url'] = function (test) {
   var type = ducktype.url;
 
-  // array
-  test.same(type.test([2,3,4]), false);
-
-  // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
-
-  // date
-  test.same(type.test(new Date()), false);
-
-  // function
-  test.same(type.test(function () {}), false);
-
-  // number
-  test.same(type.test(0), false);
-  test.same(type.test(2.3), false);
-  test.same(type.test(NaN), false);
-
-  // object
-  test.same(type.test({a:2}), false);
-
-  // string
-  test.same(type.test('2.3'), false);
-  test.same(type.test('string'), false);
-
-  // regexp
-  test.same(type.test(/regexp/), false);
-
-  // null, undefined
-  test.same(type.test(null), false);
-  test.same(type.test(undefined), false);
-
-  // type
   test.same(type.test('http://google.com'), true);
   test.same(type.test('http://www.google.com'), true);
   test.same(type.test('http://google.nl'), true);
   test.same(type.test('ftp://mysite.com'), true);
   test.same(type.test('http://mysite.com:8080/bla'), true);
+  test.same(type.test('http://192.168.0.1:8080'), true);
   test.same(type.test('http:/example.com'), false);
   test.same(type.test('http//example.com'), false);
   test.same(type.test('http://example'), false);
@@ -926,39 +964,6 @@ exports['url'] = function (test) {
 exports['email'] = function (test) {
   var type = ducktype.email;
 
-  // array
-  test.same(type.test([2,3,4]), false);
-
-  // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
-
-  // date
-  test.same(type.test(new Date()), false);
-
-  // function
-  test.same(type.test(function () {}), false);
-
-  // number
-  test.same(type.test(0), false);
-  test.same(type.test(2.3), false);
-  test.same(type.test(NaN), false);
-
-  // object
-  test.same(type.test({a:2}), false);
-
-  // string
-  test.same(type.test('2.3'), false);
-  test.same(type.test('string'), false);
-
-  // regexp
-  test.same(type.test(/regexp/), false);
-
-  // null, undefined
-  test.same(type.test(null), false);
-  test.same(type.test(undefined), false);
-
-  // type
   test.same(type.test('name@domain.com'), true);
   test.same(type.test('first.last@domain.com'), true);
   test.same(type.test('first_last@domain.com'), true);
@@ -971,4 +976,47 @@ exports['email'] = function (test) {
   test.done();
 };
 
+// TODO: extensively test integer
 
+exports['Attached types'] = function(test) {
+  test.same(ducktype.array.test([]), true);
+  test.same(ducktype.array.test(123), false);
+
+  test.same(ducktype.boolean.test(true), true);
+  test.same(ducktype.boolean.test(123), false);
+
+  test.same(ducktype.date.test(new Date()), true);
+  test.same(ducktype.date.test('str'), false);
+
+  test.same(ducktype.function.test(function () {}), true);
+  test.same(ducktype.function.test('str'), false);
+
+  test.same(ducktype.number.test(23), true);
+  test.same(ducktype.number.test('str'), false);
+
+  test.same(ducktype.object.test({}), true);
+  test.same(ducktype.object.test('str'), false);
+
+  test.same(ducktype.regexp.test(/regexp/), true);
+  test.same(ducktype.regexp.test(123), false);
+
+  test.same(ducktype.string.test('hello world'), true);
+  test.same(ducktype.string.test(123), false);
+
+  test.same(ducktype.null.test(null), true);
+  test.same(ducktype.null.test(0), false);
+
+  test.same(ducktype.undefined.test(undefined), true);
+  test.same(ducktype.undefined.test(null), false);
+
+  test.same(ducktype.url.test('http://example.com'), true);
+  test.same(ducktype.url.test('some string'), false);
+
+  test.same(ducktype.email.test('name@email.com'), true);
+  test.same(ducktype.email.test('some string'), false);
+
+  test.same(ducktype.integer.test(123), true);
+  test.same(ducktype.integer.test(123.4), false);
+
+  test.done();
+};

@@ -253,10 +253,16 @@ Where:
     against the provided types. This can be used to test the number and type
     of function arguments. Example: `ducktype([Number, String]).test(2, 'str')`.
 
-- `options` is an object with properties:
-  - A string `name` (optional)
-  - A boolean `optional` (optional)
-  - A boolean `nullable` (optional)
+- `options` is an object which can contain properties:
+  - A string `name`
+  - A boolean `optional`
+  - A boolean `nullable`
+  - A boolean `integer`. Test whether a number has an integer value.
+    Only applicable for Numbers.
+  - A number `min`. Test whether a number is larger or equal to a minimum
+    value. Only applicable for Numbers.
+  - A number `max`. Test whether a number is smaller or equal to a maximum
+    value. Only applicable for Numbers.
 
 A created ducktype has functions:
 
@@ -277,6 +283,7 @@ Ducktype comes with a set of built-in types:
 - `ducktype.boolean`
 - `ducktype.date`
 - `ducktype.email`
+- `ducktype.integer`
 - `ducktype.function`
 - `ducktype.number`
 - `ducktype.object`
