@@ -1,12 +1,5 @@
-/**
- * tests
- *
- * run these tests as:
- *
- *     nodeunit index.test.js
- */
-var ducktype = require('../ducktype.js');
-
+var test = require('ava');
+var ducktype = require('../ducktype');
 
 // create a prototype
 function Person (name, age) {
@@ -15,729 +8,684 @@ function Person (name, age) {
 }
 var person = new Person('John', 28);
 
-
-exports['Basic types - Array'] = function(test) {
+test('Basic types - Array', function (t) {
   var type = ducktype(Array);
 
   // array
-  test.same(type.test([2,3,4]), true);
+  t.same(type.test([2,3,4]), true);
 
   // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
+  t.same(type.test(true), false);
+  t.same(type.test(false), false);
 
   // date
-  test.same(type.test(new Date()), false);
+  t.same(type.test(new Date()), false);
 
   // function
-  test.same(type.test(function () {}), false);
+  t.same(type.test(function () {}), false);
 
   // number
-  test.same(type.test(0), false);
-  test.same(type.test(2.3), false);
-  test.same(type.test(NaN), false);
+  t.same(type.test(0), false);
+  t.same(type.test(2.3), false);
+  t.same(type.test(NaN), false);
 
   // object
-  test.same(type.test({a:2}), false);
+  t.same(type.test({a:2}), false);
 
   // string
-  test.same(type.test('2.3'), false);
-  test.same(type.test('string'), false);
+  t.same(type.test('2.3'), false);
+  t.same(type.test('string'), false);
 
   // regexp
-  test.same(type.test(/regexp/), false);
+  t.same(type.test(/regexp/), false);
 
   // null, undefined
-  test.same(type.test(null), false);
-  test.same(type.test(undefined), false);
+  t.same(type.test(null), false);
+  t.same(type.test(undefined), false);
 
   // prototype
-  test.same(type.test(person), false);
+  t.same(type.test(person), false);
+});
 
-  test.done();
-};
-
-
-exports['Basic types - Boolean'] = function(test) {
+test('Basic types - Boolean', function (t) {
   var type = ducktype(Boolean);
 
   // array
-  test.same(type.test([2,3,4]), false);
+  t.same(type.test([2,3,4]), false);
 
   // boolean
-  test.same(type.test(true), true);
-  test.same(type.test(false), true);
+  t.same(type.test(true), true);
+  t.same(type.test(false), true);
 
   // date
-  test.same(type.test(new Date()), false);
+  t.same(type.test(new Date()), false);
 
   // function
-  test.same(type.test(function () {}), false);
+  t.same(type.test(function () {}), false);
 
   // number
-  test.same(type.test(0), false);
-  test.same(type.test(2.3), false);
-  test.same(type.test(NaN), false);
+  t.same(type.test(0), false);
+  t.same(type.test(2.3), false);
+  t.same(type.test(NaN), false);
 
   // object
-  test.same(type.test({a:2}), false);
+  t.same(type.test({a:2}), false);
 
   // string
-  test.same(type.test('2.3'), false);
-  test.same(type.test('string'), false);
+  t.same(type.test('2.3'), false);
+  t.same(type.test('string'), false);
 
   // regexp
-  test.same(type.test(/regexp/), false);
+  t.same(type.test(/regexp/), false);
 
   // null, undefined
-  test.same(type.test(null), false);
-  test.same(type.test(undefined), false);
+  t.same(type.test(null), false);
+  t.same(type.test(undefined), false);
 
   // prototype
-  test.same(type.test(person), false);
+  t.same(type.test(person), false);
+});
 
-  test.done();
-};
-
-
-exports['Basic types - Date'] = function(test) {
+test('Basic types - Date', function (t) {
   var type = ducktype(Date);
 
   // array
-  test.same(type.test([2,3,4]), false);
+  t.same(type.test([2,3,4]), false);
 
   // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
+  t.same(type.test(true), false);
+  t.same(type.test(false), false);
 
   // date
-  test.same(type.test(new Date()), true);
+  t.same(type.test(new Date()), true);
 
   // function
-  test.same(type.test(function () {}), false);
+  t.same(type.test(function () {}), false);
 
   // number
-  test.same(type.test(0), false);
-  test.same(type.test(2.3), false);
-  test.same(type.test(NaN), false);
+  t.same(type.test(0), false);
+  t.same(type.test(2.3), false);
+  t.same(type.test(NaN), false);
 
   // object
-  test.same(type.test({a:2}), false);
+  t.same(type.test({a:2}), false);
 
   // string
-  test.same(type.test('2.3'), false);
-  test.same(type.test('string'), false);
+  t.same(type.test('2.3'), false);
+  t.same(type.test('string'), false);
 
   // regexp
-  test.same(type.test(/regexp/), false);
+  t.same(type.test(/regexp/), false);
 
   // null, undefined
-  test.same(type.test(null), false);
-  test.same(type.test(undefined), false);
+  t.same(type.test(null), false);
+  t.same(type.test(undefined), false);
 
   // prototype
-  test.same(type.test(person), false);
-
-  test.done();
-};
+  t.same(type.test(person), false);
+});
 
 
-exports['Basic types - Function'] = function(test) {
+test('Basic types - Function', function (t) {
   var type = ducktype(Function);
 
   // array
-  test.same(type.test([2,3,4]), false);
+  t.same(type.test([2,3,4]), false);
 
   // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
+  t.same(type.test(true), false);
+  t.same(type.test(false), false);
 
   // date
-  test.same(type.test(new Date()), false);
+  t.same(type.test(new Date()), false);
 
   // function
-  test.same(type.test(function () {}), true);
+  t.same(type.test(function () {}), true);
 
   // number
-  test.same(type.test(0), false);
-  test.same(type.test(2.3), false);
-  test.same(type.test(NaN), false);
+  t.same(type.test(0), false);
+  t.same(type.test(2.3), false);
+  t.same(type.test(NaN), false);
 
   // object
-  test.same(type.test({a:2}), false);
+  t.same(type.test({a:2}), false);
 
   // string
-  test.same(type.test('2.3'), false);
-  test.same(type.test('string'), false);
+  t.same(type.test('2.3'), false);
+  t.same(type.test('string'), false);
 
   // regexp
-  test.same(type.test(/regexp/), false);
+  t.same(type.test(/regexp/), false);
 
   // null, undefined
-  test.same(type.test(null), false);
-  test.same(type.test(undefined), false);
+  t.same(type.test(null), false);
+  t.same(type.test(undefined), false);
 
   // prototype
-  test.same(type.test(person), false);
-
-  test.done();
-};
+  t.same(type.test(person), false);
+});
 
 
-exports['Basic types - Number'] = function(test) {
+test('Basic types - Number', function (t) {
   var type = ducktype(Number);
 
   // array
-  test.same(type.test([2,3,4]), false);
+  t.same(type.test([2,3,4]), false);
 
   // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
+  t.same(type.test(true), false);
+  t.same(type.test(false), false);
 
   // date
-  test.same(type.test(new Date()), false);
+  t.same(type.test(new Date()), false);
 
   // function
-  test.same(type.test(function () {}), false);
+  t.same(type.test(function () {}), false);
 
   // number
-  test.same(type.test(0), true);
-  test.same(type.test(2.3), true);
-  test.same(type.test(NaN), true);
+  t.same(type.test(0), true);
+  t.same(type.test(2.3), true);
+  t.same(type.test(NaN), true);
 
   // object
-  test.same(type.test({a:2}), false);
+  t.same(type.test({a:2}), false);
 
   // string
-  test.same(type.test('2.3'), false);
-  test.same(type.test('string'), false);
+  t.same(type.test('2.3'), false);
+  t.same(type.test('string'), false);
 
   // regexp
-  test.same(type.test(/regexp/), false);
+  t.same(type.test(/regexp/), false);
 
   // null, undefined
-  test.same(type.test(null), false);
-  test.same(type.test(undefined), false);
+  t.same(type.test(null), false);
+  t.same(type.test(undefined), false);
 
   // prototype
-  test.same(type.test(person), false);
-
-  test.done();
-};
+  t.same(type.test(person), false);
+});
 
 
-exports['Basic types - Object'] = function(test) {
+test('Basic types - Object', function (t) {
   var type = ducktype(Object);
 
   // array
-  test.same(type.test([2,3,4]), false);
+  t.same(type.test([2,3,4]), false);
 
   // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
+  t.same(type.test(true), false);
+  t.same(type.test(false), false);
 
   // date
-  test.same(type.test(new Date()), false);
+  t.same(type.test(new Date()), false);
 
   // function
-  test.same(type.test(function () {}), false);
+  t.same(type.test(function () {}), false);
 
   // number
-  test.same(type.test(0), false);
-  test.same(type.test(2.3), false);
-  test.same(type.test(NaN), false);
+  t.same(type.test(0), false);
+  t.same(type.test(2.3), false);
+  t.same(type.test(NaN), false);
 
   // object
-  test.same(type.test({a:2}), true);
+  t.same(type.test({a:2}), true);
 
   // string
-  test.same(type.test('2.3'), false);
-  test.same(type.test('string'), false);
+  t.same(type.test('2.3'), false);
+  t.same(type.test('string'), false);
 
   // regexp
-  test.same(type.test(/regexp/), false);
+  t.same(type.test(/regexp/), false);
 
   // null, undefined
-  test.same(type.test(null), false);
-  test.same(type.test(undefined), false);
+  t.same(type.test(null), false);
+  t.same(type.test(undefined), false);
 
   // prototype
-  test.same(type.test(person), false);
-
-  test.done();
-};
+  t.same(type.test(person), false);
+});
 
 
-exports['Basic types - String'] = function(test) {
+test('Basic types - String', function (t) {
   var type = ducktype(String);
 
   // array
-  test.same(type.test([2,3,4]), false);
+  t.same(type.test([2,3,4]), false);
 
   // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
+  t.same(type.test(true), false);
+  t.same(type.test(false), false);
 
   // date
-  test.same(type.test(new Date()), false);
+  t.same(type.test(new Date()), false);
 
   // function
-  test.same(type.test(function () {}), false);
+  t.same(type.test(function () {}), false);
 
   // number
-  test.same(type.test(0), false);
-  test.same(type.test(2.3), false);
-  test.same(type.test(NaN), false);
+  t.same(type.test(0), false);
+  t.same(type.test(2.3), false);
+  t.same(type.test(NaN), false);
 
   // object
-  test.same(type.test({a:2}), false);
+  t.same(type.test({a:2}), false);
 
   // string
-  test.same(type.test('2.3'), true);
-  test.same(type.test('string'), true);
+  t.same(type.test('2.3'), true);
+  t.same(type.test('string'), true);
 
   // regexp
-  test.same(type.test(/regexp/), false);
+  t.same(type.test(/regexp/), false);
 
   // null, undefined
-  test.same(type.test(null), false);
-  test.same(type.test(undefined), false);
+  t.same(type.test(null), false);
+  t.same(type.test(undefined), false);
 
   // prototype
-  test.same(type.test(person), false);
-
-  test.done();
-};
+  t.same(type.test(person), false);
+});
 
 
-exports['Basic types - RegExp'] = function(test) {
+test('Basic types - RegExp', function (t) {
   var type = ducktype(RegExp);
 
   // array
-  test.same(type.test([2,3,4]), false);
+  t.same(type.test([2,3,4]), false);
 
   // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
+  t.same(type.test(true), false);
+  t.same(type.test(false), false);
 
   // date
-  test.same(type.test(new Date()), false);
+  t.same(type.test(new Date()), false);
 
   // function
-  test.same(type.test(function () {}), false);
+  t.same(type.test(function () {}), false);
 
   // number
-  test.same(type.test(0), false);
-  test.same(type.test(2.3), false);
-  test.same(type.test(NaN), false);
+  t.same(type.test(0), false);
+  t.same(type.test(2.3), false);
+  t.same(type.test(NaN), false);
 
   // object
-  test.same(type.test({a:2}), false);
+  t.same(type.test({a:2}), false);
 
   // string
-  test.same(type.test('2.3'), false);
-  test.same(type.test('string'), false);
+  t.same(type.test('2.3'), false);
+  t.same(type.test('string'), false);
 
   // regexp
-  test.same(type.test(/regexp/), true);
+  t.same(type.test(/regexp/), true);
 
   // null, undefined
-  test.same(type.test(null), false);
-  test.same(type.test(undefined), false);
+  t.same(type.test(null), false);
+  t.same(type.test(undefined), false);
 
   // prototype
-  test.same(type.test(person), false);
-
-  test.done();
-};
+  t.same(type.test(person), false);
+});
 
 
-exports['Basic types - null'] = function(test) {
+test('Basic types - null', function (t) {
   var type = ducktype(null);
 
   // array
-  test.same(type.test([2,3,4]), false);
+  t.same(type.test([2,3,4]), false);
 
   // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
+  t.same(type.test(true), false);
+  t.same(type.test(false), false);
 
   // date
-  test.same(type.test(new Date()), false);
+  t.same(type.test(new Date()), false);
 
   // function
-  test.same(type.test(function () {}), false);
+  t.same(type.test(function () {}), false);
 
   // number
-  test.same(type.test(0), false);
-  test.same(type.test(2.3), false);
-  test.same(type.test(NaN), false);
+  t.same(type.test(0), false);
+  t.same(type.test(2.3), false);
+  t.same(type.test(NaN), false);
 
   // object
-  test.same(type.test({a:2}), false);
+  t.same(type.test({a:2}), false);
 
   // string
-  test.same(type.test('2.3'), false);
-  test.same(type.test('string'), false);
+  t.same(type.test('2.3'), false);
+  t.same(type.test('string'), false);
 
   // regexp
-  test.same(type.test(/regexp/), false);
+  t.same(type.test(/regexp/), false);
 
   // null, undefined
-  test.same(type.test(null), true);
-  test.same(type.test(undefined), false);
+  t.same(type.test(null), true);
+  t.same(type.test(undefined), false);
 
   // prototype
-  test.same(type.test(person), false);
-
-  test.done();
-};
+  t.same(type.test(person), false);
+});
 
 
-exports['Basic types - undefined'] = function(test) {
+test('Basic types - undefined', function (t) {
   var type = ducktype(undefined);
 
   // array
-  test.same(type.test([2,3,4]), false);
+  t.same(type.test([2,3,4]), false);
 
   // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
+  t.same(type.test(true), false);
+  t.same(type.test(false), false);
 
   // date
-  test.same(type.test(new Date()), false);
+  t.same(type.test(new Date()), false);
 
   // function
-  test.same(type.test(function () {}), false);
+  t.same(type.test(function () {}), false);
 
   // number
-  test.same(type.test(0), false);
-  test.same(type.test(2.3), false);
-  test.same(type.test(NaN), false);
+  t.same(type.test(0), false);
+  t.same(type.test(2.3), false);
+  t.same(type.test(NaN), false);
 
   // object
-  test.same(type.test({a:2}), false);
+  t.same(type.test({a:2}), false);
 
   // string
-  test.same(type.test('2.3'), false);
-  test.same(type.test('string'), false);
+  t.same(type.test('2.3'), false);
+  t.same(type.test('string'), false);
 
   // regexp
-  test.same(type.test(/regexp/), false);
+  t.same(type.test(/regexp/), false);
 
   // null, undefined
-  test.same(type.test(null), false);
-  test.same(type.test(undefined), true);
+  t.same(type.test(null), false);
+  t.same(type.test(undefined), true);
 
   // prototype
-  test.same(type.test(person), false);
-
-  test.done();
-};
+  t.same(type.test(person), false);
+});
 
 
-exports['Basic types - prototype'] = function (test) {
+test('Basic types - prototype', function (t) {
   var type = ducktype(Person);
 
   // array
-  test.same(type.test([2,3,4]), false);
+  t.same(type.test([2,3,4]), false);
 
   // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
+  t.same(type.test(true), false);
+  t.same(type.test(false), false);
 
   // date
-  test.same(type.test(new Date()), false);
+  t.same(type.test(new Date()), false);
 
   // function
-  test.same(type.test(function () {}), false);
+  t.same(type.test(function () {}), false);
 
   // number
-  test.same(type.test(0), false);
-  test.same(type.test(2.3), false);
-  test.same(type.test(NaN), false);
+  t.same(type.test(0), false);
+  t.same(type.test(2.3), false);
+  t.same(type.test(NaN), false);
 
   // object
-  test.same(type.test({a:2}), false);
+  t.same(type.test({a:2}), false);
 
   // string
-  test.same(type.test('2.3'), false);
-  test.same(type.test('string'), false);
+  t.same(type.test('2.3'), false);
+  t.same(type.test('string'), false);
 
   // regexp
-  test.same(type.test(/regexp/), false);
+  t.same(type.test(/regexp/), false);
 
   // null, undefined
-  test.same(type.test(null), false);
-  test.same(type.test(undefined), false);
+  t.same(type.test(null), false);
+  t.same(type.test(undefined), false);
 
   // prototype
-  test.same(type.test(person), true);
-
-  test.done();
-};
+  t.same(type.test(person), true);
+});
 
 
-exports['Combination of two types'] = function(test) {
+test('Combination of two types', function (t) {
   var type = ducktype(String, Number);
 
   // array
-  test.same(type.test([2,3,4]), false);
+  t.same(type.test([2,3,4]), false);
 
   // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
+  t.same(type.test(true), false);
+  t.same(type.test(false), false);
 
   // date
-  test.same(type.test(new Date()), false);
+  t.same(type.test(new Date()), false);
 
   // function
-  test.same(type.test(function () {}), false);
+  t.same(type.test(function () {}), false);
 
   // number
-  test.same(type.test(0), true);
-  test.same(type.test(2.3), true);
-  test.same(type.test(NaN), true);
+  t.same(type.test(0), true);
+  t.same(type.test(2.3), true);
+  t.same(type.test(NaN), true);
 
   // object
-  test.same(type.test({a:2}), false);
+  t.same(type.test({a:2}), false);
 
   // string
-  test.same(type.test('2.3'), true);
-  test.same(type.test('string'), true);
+  t.same(type.test('2.3'), true);
+  t.same(type.test('string'), true);
 
   // regexp
-  test.same(type.test(/regexp/), false);
+  t.same(type.test(/regexp/), false);
 
   // null, undefined
-  test.same(type.test(null), false);
-  test.same(type.test(undefined), false);
-
-  test.done();
-};
+  t.same(type.test(null), false);
+  t.same(type.test(undefined), false);
+});
 
 
-exports['Combination of three types'] = function(test) {
+test('Combination of three types', function (t) {
   var type = ducktype(String, Number, Array);
 
   // array
-  test.same(type.test([2,3,4]), true);
+  t.same(type.test([2,3,4]), true);
 
   // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
+  t.same(type.test(true), false);
+  t.same(type.test(false), false);
 
   // date
-  test.same(type.test(new Date()), false);
+  t.same(type.test(new Date()), false);
 
   // function
-  test.same(type.test(function () {}), false);
+  t.same(type.test(function () {}), false);
 
   // number
-  test.same(type.test(0), true);
-  test.same(type.test(2.3), true);
-  test.same(type.test(NaN), true);
+  t.same(type.test(0), true);
+  t.same(type.test(2.3), true);
+  t.same(type.test(NaN), true);
 
   // object
-  test.same(type.test({a:2}), false);
+  t.same(type.test({a:2}), false);
 
   // string
-  test.same(type.test('2.3'), true);
-  test.same(type.test('string'), true);
+  t.same(type.test('2.3'), true);
+  t.same(type.test('string'), true);
 
   // regexp
-  test.same(type.test(/regexp/), false);
+  t.same(type.test(/regexp/), false);
 
   // null, undefined
-  test.same(type.test(null), false);
-  test.same(type.test(undefined), false);
-
-  test.done();
-};
+  t.same(type.test(null), false);
+  t.same(type.test(undefined), false);
+});
 
 
-exports['Options - nullable'] = function(test) {
+test('Options - nullable', function (t) {
   var type = ducktype(Number, {nullable: true});
 
   // array
-  test.same(type.test([2,3,4]), false);
+  t.same(type.test([2,3,4]), false);
 
   // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
+  t.same(type.test(true), false);
+  t.same(type.test(false), false);
 
   // date
-  test.same(type.test(new Date()), false);
+  t.same(type.test(new Date()), false);
 
   // function
-  test.same(type.test(function () {}), false);
+  t.same(type.test(function () {}), false);
 
   // number
-  test.same(type.test(0), true);
-  test.same(type.test(2.3), true);
-  test.same(type.test(NaN), true);
+  t.same(type.test(0), true);
+  t.same(type.test(2.3), true);
+  t.same(type.test(NaN), true);
 
   // object
-  test.same(type.test({a:2}), false);
+  t.same(type.test({a:2}), false);
 
   // string
-  test.same(type.test('2.3'), false);
-  test.same(type.test('string'), false);
+  t.same(type.test('2.3'), false);
+  t.same(type.test('string'), false);
 
   // regexp
-  test.same(type.test(/regexp/), false);
+  t.same(type.test(/regexp/), false);
 
   // null, undefined
-  test.same(type.test(null), true);
-  test.same(type.test(undefined), false);
-
-  test.done();
-};
+  t.same(type.test(null), true);
+  t.same(type.test(undefined), false);
+});
 
 
-exports['Options - optional'] = function(test) {
+test('Options - optional', function (t) {
   var type = ducktype(Number, {optional: true});
 
   // array
-  test.same(type.test([2,3,4]), false);
+  t.same(type.test([2,3,4]), false);
 
   // boolean
-  test.same(type.test(true), false);
-  test.same(type.test(false), false);
+  t.same(type.test(true), false);
+  t.same(type.test(false), false);
 
   // date
-  test.same(type.test(new Date()), false);
+  t.same(type.test(new Date()), false);
 
   // function
-  test.same(type.test(function () {}), false);
+  t.same(type.test(function () {}), false);
 
   // number
-  test.same(type.test(0), true);
-  test.same(type.test(2.3), true);
-  test.same(type.test(NaN), true);
+  t.same(type.test(0), true);
+  t.same(type.test(2.3), true);
+  t.same(type.test(NaN), true);
 
   // object
-  test.same(type.test({a:2}), false);
+  t.same(type.test({a:2}), false);
 
   // string
-  test.same(type.test('2.3'), false);
-  test.same(type.test('string'), false);
+  t.same(type.test('2.3'), false);
+  t.same(type.test('string'), false);
 
   // regexp
-  test.same(type.test(/regexp/), false);
+  t.same(type.test(/regexp/), false);
 
   // null, undefined
-  test.same(type.test(null), false);
-  test.same(type.test(undefined), true);
-
-  test.done();
-};
+  t.same(type.test(null), false);
+  t.same(type.test(undefined), true);
+});
 
 
-exports['Options - integer'] = function(test) {
+test('Options - integer', function (t) {
   var type = ducktype(Number, {
     integer: true
   });
 
-  test.same(type.test(0), true);
-  test.same(type.test(2.3), false);
-  test.same(type.test(3), true);
-  test.same(type.test(-3), true);
-  test.same(type.test(3e2), true);
-  test.same(type.test("23"), false);
-  test.same(type.test("str"), false);
+  t.same(type.test(0), true);
+  t.same(type.test(2.3), false);
+  t.same(type.test(3), true);
+  t.same(type.test(-3), true);
+  t.same(type.test(3e2), true);
+  t.same(type.test("23"), false);
+  t.same(type.test("str"), false);
+});
 
-  test.done();
-};
-
-exports['Options - min'] = function(test) {
+test('Options - min', function (t) {
   var type = ducktype(Number, {
     min: 5
   });
 
-  test.same(type.test(0), false);
-  test.same(type.test(5.3), true);
-  test.same(type.test(5), true);
-  test.same(type.test(new Date()), false);
-  test.same(type.test(-5), false);
-  test.same(type.test("23"), false);
-  test.same(type.test("str"), false);
-
-  test.done();
-};
+  t.same(type.test(0), false);
+  t.same(type.test(5.3), true);
+  t.same(type.test(5), true);
+  t.same(type.test(new Date()), false);
+  t.same(type.test(-5), false);
+  t.same(type.test("23"), false);
+  t.same(type.test("str"), false);
+});
 
 
-exports['Options - max'] = function(test) {
+test('Options - max', function (t) {
   var type = ducktype(Number, {
     max: 5
   });
 
-  test.same(type.test(0), true);
-  test.same(type.test(5.3), false);
-  test.same(type.test(5), true);
-  test.same(type.test(-5), true);
-  test.same(type.test(new Date()), false);
-  test.same(type.test("23"), false);
-  test.same(type.test("str"), false);
-
-  test.done();
-};
+  t.same(type.test(0), true);
+  t.same(type.test(5.3), false);
+  t.same(type.test(5), true);
+  t.same(type.test(-5), true);
+  t.same(type.test(new Date()), false);
+  t.same(type.test("23"), false);
+  t.same(type.test("str"), false);
+});
 
 
-exports['Options - min, max, integer'] = function(test) {
+test('Options - min, max, integer', function (t) {
   var type = ducktype(Number, {
     integer: true,
     min: 1,
     max: 10
   });
 
-  test.same(type.test(0), false);
-  test.same(type.test(1), true);
-  test.same(type.test(2), true);
-  test.same(type.test(9), true);
-  test.same(type.test(10), true);
-  test.same(type.test(11), false);
-  test.same(type.test(5.3), false);
-  test.same(type.test(-5), false);
-  test.same(type.test(new Date()), false);
-  test.same(type.test("23"), false);
-  test.same(type.test("str"), false);
-
-  test.done();
-};
+  t.same(type.test(0), false);
+  t.same(type.test(1), true);
+  t.same(type.test(2), true);
+  t.same(type.test(9), true);
+  t.same(type.test(10), true);
+  t.same(type.test(11), false);
+  t.same(type.test(5.3), false);
+  t.same(type.test(-5), false);
+  t.same(type.test(new Date()), false);
+  t.same(type.test("23"), false);
+  t.same(type.test("str"), false);
+});
 
 
-exports['Object - basic'] = function(test) {
+test('Object - basic', function (t) {
   var type = ducktype({a: String, b: Number});
-  test.same(type.test({a: 'hi', b: 23}), true);
-  test.same(type.test({a: 'hi', b: 23, c: true}), true);
-  test.same(type.test({a: 1, b: 23}), false);
-  test.same(type.test({a: 'hi', b: '23'}), false);
-  test.same(type.test({a: 'hi'}), false);
-  test.same(type.test({b: 23}), false);
-  test.same(type.test({}), false);
-  test.same(type.test(function () {}), false);
-
-  test.done();
-};
+  t.same(type.test({a: 'hi', b: 23}), true);
+  t.same(type.test({a: 'hi', b: 23, c: true}), true);
+  t.same(type.test({a: 1, b: 23}), false);
+  t.same(type.test({a: 'hi', b: '23'}), false);
+  t.same(type.test({a: 'hi'}), false);
+  t.same(type.test({b: 23}), false);
+  t.same(type.test({}), false);
+  t.same(type.test(function () {}), false);
+});
 
 
-exports['Object - empty'] = function(test) {
+test('Object - empty', function (t) {
   var type = ducktype({});
 
-  test.same(type.test({a: 'hi', b: 23}), true);
-  test.same(type.test({}), true);
+  t.same(type.test({a: 'hi', b: 23}), true);
+  t.same(type.test({}), true);
 
-  test.same(type.test(2), false);
-  test.same(type.test('str'), false);
-  test.same(type.test(new Date()), false);
-  test.same(type.test([1,2,3]), false);
-
-  test.done();
-};
+  t.same(type.test(2), false);
+  t.same(type.test('str'), false);
+  t.same(type.test(new Date()), false);
+  t.same(type.test([1,2,3]), false);
+});
 
 
-exports['Object - nesting'] = function(test) {
+test('Object - nesting', function (t) {
   var type = ducktype({
     a: String,
     b: {
@@ -745,60 +693,52 @@ exports['Object - nesting'] = function(test) {
       d: Boolean
     }
   });
-  test.same(type.test({a: 'hi', b: {c: 2, d: true}}), true);
-  test.same(type.test({a: 'hi', b: {c: 'hi', d: true}}), false);
-  test.same(type.test({a: 'hi', b: {c: 'hi'}}), false);
-  test.same(type.test({a: 'hi', b: 23}), false);
-  test.same(type.test({a: 2, b: {c: 2, d: true}}), false);
-  test.same(type.test({a: 'hi', b: {c: 2, d: 2}}), false);
-  test.same(type.test({}), false);
-
-  test.done();
-};
+  t.same(type.test({a: 'hi', b: {c: 2, d: true}}), true);
+  t.same(type.test({a: 'hi', b: {c: 'hi', d: true}}), false);
+  t.same(type.test({a: 'hi', b: {c: 'hi'}}), false);
+  t.same(type.test({a: 'hi', b: 23}), false);
+  t.same(type.test({a: 2, b: {c: 2, d: true}}), false);
+  t.same(type.test({a: 'hi', b: {c: 2, d: 2}}), false);
+  t.same(type.test({}), false);
+});
 
 
-exports['Object - nesting (2)'] = function(test) {
+test('Object - nesting (2)', function (t) {
   var type = ducktype({
     a: String,
     b: {
       c: Function
     }
   });
-  test.same(type.test({a: 'hi', b: {c: function () {}}}), true);
-  test.same(type.test({a: 2, b: {c: function () {}}}), false);
-  test.same(type.test({a: 2, b: {c: 'bla'}}), false);
-
-  test.done();
-};
+  t.same(type.test({a: 'hi', b: {c: function () {}}}), true);
+  t.same(type.test({a: 2, b: {c: function () {}}}), false);
+  t.same(type.test({a: 2, b: {c: 'bla'}}), false);
+});
 
 
-exports['Object - optional fields'] = function(test) {
+test('Object - optional fields', function (t) {
   var type = ducktype({
     a: String,
     b: ducktype(Number, {optional: true})
   });
-  test.same(type.test({a: 'hi', b: 2}), true);
-  test.same(type.test({a: 'hi'}), true);
-  test.same(type.test({a: 2}), false);
-  test.same(type.test({a: false, b: 2}), false);
-  test.same(type.test({a: 'string', b: 'string'}), false);
-
-  test.done();
-};
+  t.same(type.test({a: 'hi', b: 2}), true);
+  t.same(type.test({a: 'hi'}), true);
+  t.same(type.test({a: 2}), false);
+  t.same(type.test({a: false, b: 2}), false);
+  t.same(type.test({a: 'string', b: 'string'}), false);
+});
 
 
-exports['Array - basic'] = function(test) {
+test('Array - basic', function (t) {
   var type = ducktype([Number]);
-  test.same(type.test([2, 4, 5]), true);
-  test.same(type.test([2, 'string', 5]), false);
-  test.same(type.test([null, 4, 5]), false);
-  test.same(type.test([]), true);
-
-  test.done();
-};
+  t.same(type.test([2, 4, 5]), true);
+  t.same(type.test([2, 'string', 5]), false);
+  t.same(type.test([null, 4, 5]), false);
+  t.same(type.test([]), true);
+});
 
 
-exports['Array - with object'] = function(test) {
+test('Array - with object', function (t) {
   var type = ducktype([
     {
       a: String,
@@ -806,44 +746,38 @@ exports['Array - with object'] = function(test) {
     }
   ]);
 
-  test.same(type.test([]), true);
-  test.same(type.test([{a: 's', b: 2}]), true);
-  test.same(type.test([{a: 's', b: 2}, {a: 's', b: 2}]), true);
-  test.same(type.test([{a: 's', b: 2}, {a: 's', b: 's'}]), false);
-  test.same(type.test([{a: 's', b: 2}, {a: /regexp/, b: 2}]), false);
-
-  test.done();
-};
+  t.same(type.test([]), true);
+  t.same(type.test([{a: 's', b: 2}]), true);
+  t.same(type.test([{a: 's', b: 2}, {a: 's', b: 2}]), true);
+  t.same(type.test([{a: 's', b: 2}, {a: 's', b: 's'}]), false);
+  t.same(type.test([{a: 's', b: 2}, {a: /regexp/, b: 2}]), false);
+});
 
 
-exports['Array - undefined childs'] = function(test) {
+test('Array - undefined childs', function (t) {
   var type = ducktype([]);
 
-  test.same(type.test([]), true);
-  test.same(type.test([{a: 's', b: 2}]), true);
-  test.same(type.test([{a: 's', b: 2}, {a: 's', b: 2}]), true);
-  test.same(type.test([{a: 's', b: 2}, {a: 's', b: 's'}]), true);
-  test.same(type.test([{a: 's', b: 2}, {a: /regexp/, b: 2}]), true);
-
-  test.done();
-};
+  t.same(type.test([]), true);
+  t.same(type.test([{a: 's', b: 2}]), true);
+  t.same(type.test([{a: 's', b: 2}, {a: 's', b: 2}]), true);
+  t.same(type.test([{a: 's', b: 2}, {a: 's', b: 's'}]), true);
+  t.same(type.test([{a: 's', b: 2}, {a: /regexp/, b: 2}]), true);
+});
 
 
-exports['Array - multiple childs'] = function(test) {
+test('Array - multiple childs', function (t) {
   var type = ducktype([Number, String]);
 
-  test.same(type.test([]), false);
-  test.same(type.test([2]), false);
-  test.same(type.test([2, 'string']), true);
-  test.same(type.test([2, 2]), false);
-  test.same(type.test([false, 'string']), false);
-  test.same(type.test([2, 'string', 3]), false);
-
-  test.done();
-};
+  t.same(type.test([]), false);
+  t.same(type.test([2]), false);
+  t.same(type.test([2, 'string']), true);
+  t.same(type.test([2, 2]), false);
+  t.same(type.test([false, 'string']), false);
+  t.same(type.test([2, 'string', 3]), false);
+});
 
 
-exports['Object with Array with Object'] = function (test) {
+test('Object with Array with Object', function (t) {
   var family = ducktype({
     name: String,
     age: ducktype(Number, {optional: true}),
@@ -855,7 +789,7 @@ exports['Object with Array with Object'] = function (test) {
     ]
   });
 
-  test.same(family.test({
+  t.same(family.test({
     name: 'John',
     children: [
       {
@@ -867,156 +801,140 @@ exports['Object with Array with Object'] = function (test) {
       }
     ]
   }), true);
-
-  test.done();
-};
+});
 
 
-exports['Function arguments'] = function(test) {
+test('Function arguments', function (t) {
   var type = ducktype([Number, String]);
 
   (function fn () {
-    test.same(type.test(arguments), true);
+    t.same(type.test(arguments), true);
   })(2, 'string');
 
   (function fn () {
-    test.same(type.test(arguments), false);
+    t.same(type.test(arguments), false);
   })(2, 'string', 3);
 
   (function fn () {
-    test.same(type.test(arguments), false);
+    t.same(type.test(arguments), false);
   })(2, 3);
-
-  test.done();
-};
+});
 
 
-exports['Function wrapper'] = function(test) {
+test('Function wrapper', function (t) {
   var add = ducktype([Number, Number]).wrap(function (a, b) {
     return a + b;
   });
 
-  test.ok(function () {
+  t.ok(function () {
     add(2, 3);
   });
 
-  test.throws(function () {
+  t.throws(function () {
     add(2, 'string');
   }, TypeError);
 
-  test.throws(function () {
+  t.throws(function () {
     add(2, 3, 4);
   }, TypeError);
 
-  test.throws(function () {
+  t.throws(function () {
     add(2);
   }, TypeError);
+});
 
-  test.done();
-};
-
-exports['Construct function'] = function(test) {
+test('Construct function', function (t) {
   var ok = ducktype.construct(function (object) {
     return (object === 'OK');
   });
 
-  test.same(ok.test('OK'), true);
-  test.same(ok.test('ok'), false);
-  test.same(ok.test(2), false);
-  test.same(ok.test(null), false);
-  test.same(ok.test(undefined), false);
-  test.same(ok.test(), false);
+  t.same(ok.test('OK'), true);
+  t.same(ok.test('ok'), false);
+  t.same(ok.test(2), false);
+  t.same(ok.test(null), false);
+  t.same(ok.test(undefined), false);
+  t.same(ok.test(), false);
+});
 
-  test.done();
-};
-
-exports['Construct regexp'] = function(test) {
+test('Construct regexp', function (t) {
   var ok = ducktype.construct(/^OK$/);
 
-  test.same(ok.test('OK'), true);
-  test.same(ok.test('ok'), false);
-  test.same(ok.test(2), false);
-  test.same(ok.test(null), false);
-  test.same(ok.test(undefined), false);
-  test.same(ok.test(), false);
-
-  test.done();
-};
+  t.same(ok.test('OK'), true);
+  t.same(ok.test('ok'), false);
+  t.same(ok.test(2), false);
+  t.same(ok.test(null), false);
+  t.same(ok.test(undefined), false);
+  t.same(ok.test(), false);
+});
 
 
-exports['url'] = function (test) {
+test('url', function (t) {
   var type = ducktype.url;
 
-  test.same(type.test('http://google.com'), true);
-  test.same(type.test('http://www.google.com'), true);
-  test.same(type.test('http://google.nl'), true);
-  test.same(type.test('ftp://mysite.com'), true);
-  test.same(type.test('http://mysite.com:8080/bla'), true);
-  test.same(type.test('http://192.168.0.1:8080'), true);
-  test.same(type.test('http:/example.com'), false);
-  test.same(type.test('http//example.com'), false);
-  test.same(type.test('http://example'), false);
-  test.same(type.test('www.google.com'), false);
+  t.same(type.test('http://google.com'), true);
+  t.same(type.test('http://www.google.com'), true);
+  t.same(type.test('http://google.nl'), true);
+  t.same(type.test('ftp://mysite.com'), true);
+  t.same(type.test('http://mysite.com:8080/bla'), true);
+  t.same(type.test('http://192.168.0.1:8080'), true);
+  t.same(type.test('http:/example.com'), false);
+  t.same(type.test('http//example.com'), false);
+  t.same(type.test('http://example'), false);
+  t.same(type.test('www.google.com'), false);
+});
 
-  test.done();
-};
-
-exports['email'] = function (test) {
+test('email', function (t) {
   var type = ducktype.email;
 
-  test.same(type.test('name@domain.com'), true);
-  test.same(type.test('first.last@domain.com'), true);
-  test.same(type.test('first_last@domain.com'), true);
-  test.same(type.test('@domain.com'), false);
-  test.same(type.test('domain.com'), false);
-  test.same(type.test('http://domain.com'), false);
-  test.same(type.test('fist last@domain.com'), false);
-  test.same(type.test('name@domain'), false);
-
-  test.done();
-};
+  t.same(type.test('name@domain.com'), true);
+  t.same(type.test('first.last@domain.com'), true);
+  t.same(type.test('first_last@domain.com'), true);
+  t.same(type.test('@domain.com'), false);
+  t.same(type.test('domain.com'), false);
+  t.same(type.test('http://domain.com'), false);
+  t.same(type.test('fist last@domain.com'), false);
+  t.same(type.test('name@domain'), false);
+});
 
 // TODO: extensively test integer
 
-exports['Attached types'] = function(test) {
-  test.same(ducktype.array.test([]), true);
-  test.same(ducktype.array.test(123), false);
+test('Attached types', function (t) {
+  t.same(ducktype.array.test([]), true);
+  t.same(ducktype.array.test(123), false);
 
-  test.same(ducktype.boolean.test(true), true);
-  test.same(ducktype.boolean.test(123), false);
+  t.same(ducktype.boolean.test(true), true);
+  t.same(ducktype.boolean.test(123), false);
 
-  test.same(ducktype.date.test(new Date()), true);
-  test.same(ducktype.date.test('str'), false);
+  t.same(ducktype.date.test(new Date()), true);
+  t.same(ducktype.date.test('str'), false);
 
-  test.same(ducktype.function.test(function () {}), true);
-  test.same(ducktype.function.test('str'), false);
+  t.same(ducktype.function.test(function () {}), true);
+  t.same(ducktype.function.test('str'), false);
 
-  test.same(ducktype.number.test(23), true);
-  test.same(ducktype.number.test('str'), false);
+  t.same(ducktype.number.test(23), true);
+  t.same(ducktype.number.test('str'), false);
 
-  test.same(ducktype.object.test({}), true);
-  test.same(ducktype.object.test('str'), false);
+  t.same(ducktype.object.test({}), true);
+  t.same(ducktype.object.test('str'), false);
 
-  test.same(ducktype.regexp.test(/regexp/), true);
-  test.same(ducktype.regexp.test(123), false);
+  t.same(ducktype.regexp.test(/regexp/), true);
+  t.same(ducktype.regexp.test(123), false);
 
-  test.same(ducktype.string.test('hello world'), true);
-  test.same(ducktype.string.test(123), false);
+  t.same(ducktype.string.test('hello world'), true);
+  t.same(ducktype.string.test(123), false);
 
-  test.same(ducktype.null.test(null), true);
-  test.same(ducktype.null.test(0), false);
+  t.same(ducktype.null.test(null), true);
+  t.same(ducktype.null.test(0), false);
 
-  test.same(ducktype.undefined.test(undefined), true);
-  test.same(ducktype.undefined.test(null), false);
+  t.same(ducktype.undefined.test(undefined), true);
+  t.same(ducktype.undefined.test(null), false);
 
-  test.same(ducktype.url.test('http://example.com'), true);
-  test.same(ducktype.url.test('some string'), false);
+  t.same(ducktype.url.test('http://example.com'), true);
+  t.same(ducktype.url.test('some string'), false);
 
-  test.same(ducktype.email.test('name@email.com'), true);
-  test.same(ducktype.email.test('some string'), false);
+  t.same(ducktype.email.test('name@email.com'), true);
+  t.same(ducktype.email.test('some string'), false);
 
-  test.same(ducktype.integer.test(123), true);
-  test.same(ducktype.integer.test(123.4), false);
-
-  test.done();
-};
+  t.same(ducktype.integer.test(123), true);
+  t.same(ducktype.integer.test(123.4), false);
+});

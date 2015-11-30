@@ -23,10 +23,15 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "nodeunit": "latest"
+    "ava": "0.7.0"
+  },
+  "babel": {
+    "ignore": [
+      "test/*.test.js"
+    ]
   },
   "scripts": {
-    "test": "nodeunit test"
+    "test": "ava test"
   },
   "main": "./ducktype.js",
   "engines": {

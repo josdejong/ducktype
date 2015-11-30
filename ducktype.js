@@ -20,12 +20,14 @@
  *        nullable: Boolean (optional)
  */
 (function () {
+  'use strict';
+    
   /**
    * Duck type constructor
    * @param {{name: String, test: Function}} options
    * @constructor DuckType
    */
-  function DuckType (options) {
+  function DuckType(options) {
     this.name = options.name;
     this.test = options.test;
   }
@@ -64,7 +66,7 @@
     // TODO: test whether this DuckType is an Array
     // Alter the behavior of the ducktype in case of a test with zero or one arguments
 
-    return function ducktypeWrapper () {
+    return function ducktypeWrapper() {
       validate(arguments);
       fn.apply(fn, arguments);
     };
@@ -193,8 +195,9 @@
    */
   function createObject (type, options) {
     // retrieve the test functions for each of the objects properties
-    var tests = {};
-    for (var prop in type) {
+    var tests = {},
+        prop;
+    for (prop in type) {
       if (type.hasOwnProperty(prop)) {
         tests[prop] = ducktype(type[prop]).test;
       }
@@ -205,13 +208,15 @@
     return new DuckType({
       name: options && options.name || null,
       test: function test (object) {
+        var prop;
+        
         // test whether we have an object
         if (!isObject(object)) {
           return false;
         }
 
         // test each of the defined properties
-        for (var prop in tests) {
+        for (prop in tests) {
           if (tests.hasOwnProperty(prop)) {
             if (!tests[prop](object[prop])) {
               return false;
