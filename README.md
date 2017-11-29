@@ -1,4 +1,6 @@
 # ducktype
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjosdejong%2Fducktype.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjosdejong%2Fducktype?ref=badge_shield)
+
 
 Flexible data validation using a duck type interface. For JavaScript and Node.js.
 
@@ -310,3 +312,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjosdejong%2Fducktype.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjosdejong%2Fducktype?ref=badge_large)
