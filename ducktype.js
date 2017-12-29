@@ -61,14 +61,14 @@
    * @returns {Function} wrapper
    */
   DuckType.prototype.wrap = function (fn) {
-    var validate = this.validate;
+    var ducktype = this
 
     // TODO: test whether this DuckType is an Array
     // Alter the behavior of the ducktype in case of a test with zero or one arguments
 
     return function ducktypeWrapper() {
-      validate(arguments);
-      fn.apply(fn, arguments);
+      ducktype.validate(arguments);
+      return fn.apply(fn, arguments);
     };
   };
 
@@ -528,7 +528,7 @@
         });
       }
 
-      if (tests.length == 1) {
+      if (tests.length === 1) {
         // a single test
         newDucktype = new DuckType({
           name: name,

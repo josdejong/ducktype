@@ -1,8 +1,9 @@
 {
   "name": "ducktype",
-  "version": "1.2.0-SNAPSHOT",
+  "version": "1.2.0",
   "description": "Flexible data validation using a duck type interface",
   "author": "Jos de Jong <wjosdejong@gmail.com>",
+  "license": "Apache-2.0",
   "contributors": [
     {
       "name": "Jos de Jong",
@@ -23,7 +24,7 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "ava": "0.7.0"
+    "ava": "0.24.0"
   },
   "babel": {
     "ignore": [

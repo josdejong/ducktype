@@ -310,9 +310,8 @@ To execute tests for the library, run:
 
 ## Roadmap
 
-- Implement common data types like url, phone number, email, postcode, etc.
-- Implement extra options for specific types:
-  - Number: integer, min, max, finite, odd, even, positive, negative, nan, ...
+- Implement more options for specific types:
+  - Number: finite, odd, even, positive, negative, nan, ...
   - String: lowercase, uppercase, alpha, alphanumeric, empty, ...
   - Array: length, length.min, length.max, ...
 - Implement a parser accepting a string describing a type in
@@ -326,7 +325,7 @@ To execute tests for the library, run:
 
 ## License
 
-Copyright (C) 2013 Jos de Jong <wjosdejong@gmail.com>
+Copyright (C) 2013-2017 Jos de Jong <wjosdejong@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
