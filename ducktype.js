@@ -252,7 +252,7 @@
         }
 
         // test for correct length
-        if (object.length != tests.length) {
+        if (object.length !== tests.length) {
           return false;
         }
 
@@ -405,16 +405,16 @@
     var test;
 
     // process arguments
-    if (arguments.length == 0) {
+    if (arguments.length === 0) {
       throw new SyntaxError('Parameter type missing');
     }
-    else if (arguments.length == 1) {
+    else if (arguments.length === 1) {
       type = arguments[0];
     }
     else {
       types = [];
       for (i = 0, ii = arguments.length; i < ii; i++) {
-        if ((i == ii - 1) && arguments[i].constructor === Object) {
+        if ((i === ii - 1) && arguments[i].constructor === Object) {
           options = arguments[i];
         }
         else {
@@ -422,7 +422,7 @@
         }
       }
 
-      if (types.length == 1) {
+      if (types.length === 1) {
         type = types[0];
         types = null;
       }
@@ -466,10 +466,10 @@
       newDucktype = type; // already a duck type
     }
     else if (Array.isArray(type)) {
-      if (type.length == 0) {
+      if (type.length === 0) {
         newDucktype = basic.array;
       }
-      else if (type.length == 1) {
+      else if (type.length === 1) {
         newDucktype = createArrayRepeat(type, options);
       }
       else {
@@ -477,7 +477,7 @@
       }
     }
     else if ((type instanceof Object) && (type.constructor === Object)) {
-      if (Object.keys(type).length == 0) {
+      if (Object.keys(type).length === 0) {
         newDucktype = basic.object;
       }
       else {
@@ -563,7 +563,7 @@
    */
   // TODO: document ducktype.construct
   ducktype.construct = function construct(name, test) {
-    if (arguments.length == 1) {
+    if (arguments.length === 1) {
       test = arguments[0];
       name = null;
     }
