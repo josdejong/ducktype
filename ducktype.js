@@ -158,6 +158,7 @@
 
   // type url
   // http://regexlib.com/REDetails.aspx?regexp_id=2841
+  // Be careful: when changing the regexp, double check whether it is still secure. test with https://www.npmjs.com/package/safe-regex
   var urlRegExp = /^(ht|f)tp(s?):\/\/(([a-zA-Z0-9\-._]+(\.[a-zA-Z0-9\-._]+))|localhost)(\/?)[a-zA-Z0-9\-.?,'\/\\+&%$#_]*?([\d\w.\/%+\-=&?:\\"',|~;]*)$/;
   basic.url = new DuckType({
     name: 'url',
@@ -168,6 +169,7 @@
 
   // type email
   // http://regexlib.com/REDetails.aspx?regexp_id=1448
+  // Be careful: when changing the regexp, double check whether it is still secure. test with https://www.npmjs.com/package/safe-regex
   var emailRegExp = /^[a-zA-Z][\w.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z.]*[a-zA-Z]$/;
   basic.email = new DuckType({
     name: 'email',
