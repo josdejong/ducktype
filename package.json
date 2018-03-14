@@ -1,6 +1,6 @@
 {
   "name": "ducktype",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Flexible data validation using a duck type interface",
   "author": "Jos de Jong <wjosdejong@gmail.com>",
   "license": "Apache-2.0",
