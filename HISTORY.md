@@ -3,6 +3,11 @@
 https://github.com/josdejong/ducktype
 
 
+## 2018-03-14, version 1.2.1
+
+- Security fix in the regular expression for urls.
+
+
 ## 2017-12-29, version 1.2.0
 
 - Implemented types `ducktype.email`, `ducktype.integer`, `ducktype.url`.

@@ -878,6 +878,7 @@ test('url', function (t) {
   t.is(type.test('http:/example.com'), false);
   t.is(type.test('http//example.com'), false);
   t.is(type.test('http://example'), false);
+  t.is(type.test('http://example.com?a=2&b=a%2Bb'), true);
   t.is(type.test('www.google.com'), false);
 });
 

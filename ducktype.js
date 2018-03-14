@@ -158,7 +158,7 @@
 
   // type url
   // http://regexlib.com/REDetails.aspx?regexp_id=2841
-  var urlRegExp = /^(ht|f)tp(s?):\/\/(([a-zA-Z0-9\-\._]+(\.[a-zA-Z0-9\-\._]+)+)|localhost)(\/?)([a-zA-Z0-9\-\.\?,'\/\\\+&amp;%\$#_]*)?([\d\w\.\/%\+\-=&amp;\?:\\&quot;',\|~;]*)$/;
+  var urlRegExp = /^(ht|f)tp(s?):\/\/(([a-zA-Z0-9\-._]+(\.[a-zA-Z0-9\-._]+))|localhost)(\/?)[a-zA-Z0-9\-.?,'\/\\+&%$#_]*?([\d\w.\/%+\-=&?:\\"',|~;]*)$/;
   basic.url = new DuckType({
     name: 'url',
     test: function (object) {
@@ -168,7 +168,7 @@
 
   // type email
   // http://regexlib.com/REDetails.aspx?regexp_id=1448
-  var emailRegExp = /^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/;
+  var emailRegExp = /^[a-zA-Z][\w.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z.]*[a-zA-Z]$/;
   basic.email = new DuckType({
     name: 'email',
     test: function (object) {

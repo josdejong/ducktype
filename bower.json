@@ -1,6 +1,5 @@
 {
   "name": "ducktype",
-  "version": "1.2.0-SNAPSHOT",
   "main": "ducktype.js",
   "ignore": [
     "node_modules",
