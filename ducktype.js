@@ -157,20 +157,15 @@
   });
 
   // type url
-  // http://regexlib.com/REDetails.aspx?regexp_id=2841
-  // Be careful: when changing the regexp, double check whether it is still secure. test with https://www.npmjs.com/package/safe-regex
-  var urlRegExp = /^(ht|f)tp(s?):\/\/(([a-zA-Z0-9\-._]+(\.[a-zA-Z0-9\-._]+))|localhost)(\/?)[a-zA-Z0-9\-.?,'\/\\+&%$#_]*?([\d\w.\/%+\-=&?:\\"',|~;]*)$/;
   basic.url = new DuckType({
     name: 'url',
-    test: function (object) {
-      return urlRegExp.test(object);
-    }
+    test: isUrl
   });
 
   // type email
-  // http://regexlib.com/REDetails.aspx?regexp_id=1448
-  // Be careful: when changing the regexp, double check whether it is still secure. test with https://www.npmjs.com/package/safe-regex
-  var emailRegExp = /^[a-zA-Z][\w.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z.]*[a-zA-Z]$/;
+  // Be careful: when changing the regexp, double check whether it is still secure.
+  // test with https://www.npmjs.com/package/vuln-regex-detector
+  var emailRegExp = /^[a-zA-Z][\w.-]*[a-zA-Z0-9]@\w+\.[a-zA-Z]+$/;
   basic.email = new DuckType({
     name: 'email',
     test: function (object) {
@@ -592,6 +587,42 @@
     if (basic.hasOwnProperty(type)) {
       ducktype[type] = basic[type];
     }
+  }
+
+  /**
+   * RegExps.
+   * A URL must match #1 and then at least one of #2/#3.
+   * Use two levels of REs to avoid REDOS.
+   */
+  var protocolAndDomainRE = /^(?:\w+:)?\/\/(\S+)$/;
+  var localhostDomainRE = /^localhost[:?\d]*(?:[^:?\d]\S*)?$/
+  var nonLocalhostDomainRE = /^[^\s.]+\.\S{2,}$/;
+
+  /**
+   * Loosely validate a URL `string`.
+   *
+   * Source: https://github.com/segmentio/is-url
+   *
+   * @param {String} string
+   * @return {Boolean}
+   */
+  function isUrl(string){
+    if (typeof string !== 'string') {
+      return false;
+    }
+
+    var match = string.match(protocolAndDomainRE);
+    if (!match) {
+      return false;
+    }
+
+    var everythingAfterProtocol = match[1];
+    if (!everythingAfterProtocol) {
+      return false;
+    }
+
+    return localhostDomainRE.test(everythingAfterProtocol) ||
+        nonLocalhostDomainRE.test(everythingAfterProtocol);
   }
 
   // TODO: implement a parser implements js type annotations

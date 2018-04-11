@@ -3,6 +3,11 @@
 https://github.com/josdejong/ducktype
 
 
+## 2018-04-11, version 1.2.2
+
+- Security fixes in the regular expression for email and url.
+
+
 ## 2018-03-14, version 1.2.1
 
 - Security fix in the regular expression for urls.

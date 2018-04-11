@@ -875,11 +875,13 @@ test('url', function (t) {
   t.is(type.test('ftp://mysite.com'), true);
   t.is(type.test('http://mysite.com:8080/bla'), true);
   t.is(type.test('http://192.168.0.1:8080'), true);
+  t.is(type.test('http://example.com?a=2&b=a%2Bb'), true);
+
   t.is(type.test('http:/example.com'), false);
   t.is(type.test('http//example.com'), false);
   t.is(type.test('http://example'), false);
-  t.is(type.test('http://example.com?a=2&b=a%2Bb'), true);
   t.is(type.test('www.google.com'), false);
+  t.is(type.test('name@domain.com'), false);
 });
 
 test('email', function (t) {
@@ -888,6 +890,8 @@ test('email', function (t) {
   t.is(type.test('name@domain.com'), true);
   t.is(type.test('first.last@domain.com'), true);
   t.is(type.test('first_last@domain.com'), true);
+  t.is(type.test('first1_last.second2.third@foo2.eu'), true);
+
   t.is(type.test('@domain.com'), false);
   t.is(type.test('domain.com'), false);
   t.is(type.test('http://domain.com'), false);
