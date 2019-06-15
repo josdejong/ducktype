@@ -24,7 +24,7 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "ava": "0.25.0"
+    "ava": "2.1.0"
   },
   "babel": {
     "ignore": [
@@ -32,7 +32,7 @@
     ]
   },
   "scripts": {
-    "test": "ava test"
+    "test": "ava"
   },
   "main": "./ducktype.js",
   "engines": {
