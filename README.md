@@ -1,5 +1,7 @@
 # ducktype
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/josdejong/ducktype.svg)](https://greenkeeper.io/)
+
 Flexible data validation using a duck type interface for JavaScript and Node.js.
 
 As JavaScript is a loosely typed language, any variable can contain any
