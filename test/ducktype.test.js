@@ -830,15 +830,15 @@ test('Function wrapper', function (t) {
 
   t.throws(function () {
     add(2, 'string');
-  }, TypeError);
+  }, { instanceOf: TypeError });
 
   t.throws(function () {
     add(2, 3, 4);
-  }, TypeError);
+  }, { instanceOf: TypeError });
 
   t.throws(function () {
     add(2);
-  }, TypeError);
+  }, { instanceOf: TypeError });
 });
 
 test('Construct function', function (t) {
