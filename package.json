@@ -24,7 +24,7 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "ava": "3.13.0"
+    "ava": "3.14.0"
   },
   "babel": {
     "ignore": [
